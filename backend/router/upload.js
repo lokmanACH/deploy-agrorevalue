@@ -29,9 +29,8 @@ router.post('/', (req, res) => {
             fs.writeFileSync(filePath, Buffer.from(base64Data, 'base64'));
 
             const imageUrl = `/uploads/${fileName}`;
-            const fullUrl = `http://localhost:5000${imageUrl}`;
             console.log(`✅ Image uploaded: ${fileName}`);
-            return res.json({ image_url: fullUrl, path: fullUrl });
+            return res.json({ image_url: imageUrl, path: imageUrl });
         }
 
         // Handle multipart form-data (if using multer in future)
