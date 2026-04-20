@@ -301,7 +301,6 @@ export default function BuyerProfilePage() {
   const [wilaya, setWilaya] = useState(defaultUser.wilaya);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
-  const [loaded, setLoaded] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
