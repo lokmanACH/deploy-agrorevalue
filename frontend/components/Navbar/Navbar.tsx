@@ -115,6 +115,8 @@ export function Navbar() {
   const [buyer, setBuyer] = useState<BuyerType>(DEFAULT_BUYER);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     setIsDark(document.documentElement.classList.contains("dark"));
 
     const raw = localStorage.getItem("agro_user");
@@ -139,6 +141,8 @@ export function Navbar() {
   }, []);
 
   const toggleTheme = () => {
+    if (typeof window === 'undefined') return;
+    
     if (document.documentElement.classList.contains("dark")) {
       document.documentElement.classList.remove("dark");
       localStorage.setItem("theme", "light");

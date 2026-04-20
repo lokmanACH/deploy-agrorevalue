@@ -164,11 +164,12 @@ export function AddProductForm({ onSuccess }: AddProductFormProps) {
           const base64String = e.target?.result as string;
           
           const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+          const token = typeof window !== 'undefined' ? localStorage.getItem('agro_token') : null;
           const response = await fetch(`${apiUrl}/api/upload`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${localStorage.getItem('agro_token')}`,
+              "Authorization": `Bearer ${token}`,
             },
             body: JSON.stringify({ image: base64String }),
           });

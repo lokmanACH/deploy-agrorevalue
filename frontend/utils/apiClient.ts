@@ -39,6 +39,7 @@ export interface AuthUser {
 
 /** Store the token + user after a successful sign-in */
 export function saveAuth(token: string, user: AuthUser) {
+  if (typeof window === 'undefined') return;
   localStorage.setItem('agro_token', token);
   localStorage.setItem('agro_user', JSON.stringify(user));
 }
@@ -59,6 +60,7 @@ export function getUser(): AuthUser | null {
 
 /** Clear stored credentials (sign-out) */
 export function logout() {
+  if (typeof window === 'undefined') return;
   localStorage.removeItem('agro_token');
   localStorage.removeItem('agro_user');
 }

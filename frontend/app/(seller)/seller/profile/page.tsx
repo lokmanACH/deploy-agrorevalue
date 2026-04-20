@@ -1,83 +1,17 @@
-// "use client";
+"use client";
 
-// import { useState, useRef } from "react";
-// import {
-//   User, Mail, Phone, MapPin, Building2, Lock, Pencil, Camera, CheckCircle
-// } from "lucide-react";
-
-// // Mock user data
-// const data = JSON.parse(localStorage.getItem("agro_user") || "{}");
-// const mockUser = {
-//   _id: data._id || "1",
-//   firstName: data.first_name || "Chemseddine",
-//   lastName: data.last_name || "Lhajri",
-//   email: data.email || "chemsouhajra@example.com",
-//   phone: data.phone || "+213 555 123 456",
-//   company: data.company_name || "El baraka superette",
-//   wilaya:"Constantine",
-// };
-// console.log(JSON.parse(localStorage.getItem("agro_user") || "{} "));
-
-// // ─── Input field ──────────────────────────────────────────────────────────────
-
-// function InputField({
-//   label,
-//   icon,
-//   value,
-//   onChange,
-//   disabled,
-//   type = "text",
-// }: {
-//   label: string;
-//   icon: React.ReactNode;
-//   value: string;
-//   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-//   disabled?: boolean;
-//   type?: string;
-// }) {
-//   return (
-//     <div className="space-y-1.5">
-//       <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
-//         {label}
-//       </label>
-//       <div
-//         className={`flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 border transition-all ${
-//           disabled
-//             ? "bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800"
-//             : "bg-white dark:bg-zinc-950 border-emerald-400/60 shadow-sm ring-2 ring-emerald-500/10"
-//         }`}
-//       >
-//         <span className={disabled ? "text-zinc-300 dark:text-zinc-600" : "text-emerald-600"}>
-//           {icon}
-//         </span>
-//         <input
-//           type={type}
-//           value={value}
-//           onChange={onChange}
-//           disabled={disabled}
-//           className="w-full bg-transparent outline-none text-sm font-medium text-zinc-900 dark:text-zinc-50 disabled:cursor-default placeholder:text-zinc-400"
-//         />
-//       </div>
-//     </div>
-//   );
-// }
-
-// // ─── Main Page ────────────────────────────────────────────────────────────────
-
-// export default function BuyerProfilePage() {
-//   const [user] = useState(mockUser);
-
-//   const [editMode, setEditMode] = useState(false);
-//   const [firstName, setFirstName] = useState(user.firstName || "");
-//   const [lastName, setLastName] = useState(user.lastName || "");
-//   const [email] = useState(user.email || "");
-//   const [phone, setPhone] = useState(user.phone || "");
-//   const [company, setCompany] = useState(user.company || "");
-//   const [wilaya, setWilaya] = useState(user.wilaya || "");
-//   const [saved, setSaved] = useState(false);
-//   const [error, setError] = useState("");
-
-//   const fileInputRef = useRef<HTMLInputElement>(null);
+import { useState, useRef, useEffect } from "react";
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Building2,
+  Lock,
+  Pencil,
+  Camera,
+  CheckCircle,
+} from "lucide-react";
 
 //   const handleAvatarClick = () => fileInputRef.current?.click();
 //   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -283,20 +217,6 @@
 //     </div>
 //   );
 // }
-"use client";
-
-import { useState, useEffect, useRef } from "react";
-import {
-  User,
-  Mail,
-  Phone,
-  MapPin,
-  Building2,
-  Lock,
-  Pencil,
-  Camera,
-  CheckCircle,
-} from "lucide-react";
 
 // ─── Input field ──────────────────────────────────────────────────────────────
 
@@ -381,10 +301,45 @@ export default function BuyerProfilePage() {
   const [wilaya, setWilaya] = useState(defaultUser.wilaya);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
+  const [loaded, setLoaded] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    try {
+      const raw = localStorage.getItem("agro_user");
+      if (raw) {
+        const data = JSON.parse(raw);
+        const parsedUser: UserType = {
+          _id: data._id || "1",
+          firstName: data.first_name || "Chemseddine",
+          lastName: data.last_name || "Lhajri",
+          email: data.email || "chemsouhajra@example.com",
+          phone: data.phone || "+213 555 123 456",
+          company: data.company_name || "El baraka superette",
+          wilaya: data.wilaya || "Constantine",
+        };
+        setUser(parsedUser);
+        setFirstName(parsedUser.firstName);
+        setLastName(parsedUser.lastName);
+        setEmail(parsedUser.email);
+        setPhone(parsedUser.phone);
+        setCompany(parsedUser.company);
+        setWilaya(parsedUser.wilaya);
+        console.log(parsedUser);
+      }
+    } catch (err) {
+      console.error("Failed to parse agro_user from localStorage:", err);
+    } finally {
+      setLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     try {
       const raw = localStorage.getItem("agro_user");
 
@@ -441,18 +396,20 @@ export default function BuyerProfilePage() {
 
       setUser(updatedUser);
 
-      localStorage.setItem(
-        "agro_user",
-        JSON.stringify({
-          _id: updatedUser._id,
-          first_name: updatedUser.firstName,
-          last_name: updatedUser.lastName,
-          email: updatedUser.email,
-          phone: updatedUser.phone,
-          company_name: updatedUser.company,
-          wilaya: updatedUser.wilaya,
-        })
-      );
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(
+          "agro_user",
+          JSON.stringify({
+            _id: updatedUser._id,
+            first_name: updatedUser.firstName,
+            last_name: updatedUser.lastName,
+            email: updatedUser.email,
+            phone: updatedUser.phone,
+            company_name: updatedUser.company,
+            wilaya: updatedUser.wilaya,
+          })
+        );
+      }
 
       setSaved(true);
       setEditMode(false);
