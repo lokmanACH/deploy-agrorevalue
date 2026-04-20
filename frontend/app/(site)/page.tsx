@@ -26,17 +26,17 @@ interface Product {
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
 const MOCK_PRODUCTS: Product[] = [
-  { id: 1, image: "https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=400&h=300&fit=crop", name: "Tomates fraîches", category: "Légumes · Lot en gros", quantity: "1.2 Tonnes", quality: "A", location: "Mazida, Béjaïa", kiloPrice: 185, totalPrice: 222000, deliveryPrice: 8000, timeLeft: "2j 14h" },
-  { id: 2, image: "https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=400&h=300&fit=crop", name: "Pommes de terre", category: "Légumes · Lot en gros", quantity: "3 Tonnes", quality: "A", location: "Aïn Defla", kiloPrice: 60, totalPrice: 180000, deliveryPrice: 12000, timeLeft: "1j 6h" },
-  { id: 3, image: "https://images.unsplash.com/photo-1574226516831-e1dff420e562?w=400&h=300&fit=crop", name: "Dattes Deglet Nour", category: "Fruits · Premium", quantity: "500 kg", quality: "A", location: "Biskra", kiloPrice: 750, totalPrice: 375000, deliveryPrice: 9500, timeLeft: "4j 2h" },
-  { id: 4, image: "https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=400&h=300&fit=crop", name: "Oranges de saison", category: "Fruits · Lot en gros", quantity: "2 Tonnes", quality: "B", location: "Blida", kiloPrice: 70, totalPrice: 140000, deliveryPrice: 7000, timeLeft: "3j 18h" },
-  { id: 5, image: "https://images.unsplash.com/photo-1506484381205-f7945653044d?w=400&h=300&fit=crop", name: "Blé dur", category: "Céréales · Lot industriel", quantity: "10 Tonnes", quality: "B", location: "Sétif", kiloPrice: 52, totalPrice: 520000, deliveryPrice: 25000, timeLeft: "6j 0h" },
-  { id: 6, image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400&h=300&fit=crop", name: "Huile d'olive extra", category: "Huile · Premium", quantity: "800 L", quality: "A", location: "Tizi Ouzou", kiloPrice: 1200, totalPrice: 960000, deliveryPrice: 15000, timeLeft: "5j 9h" },
-  { id: 7, image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400&h=300&fit=crop", name: "Poivrons rouges", category: "Légumes · Lot en gros", quantity: "600 kg", quality: "A", location: "Annaba", kiloPrice: 150, totalPrice: 90000, deliveryPrice: 6000, timeLeft: "1j 22h" },
-  { id: 8, image: "https://images.unsplash.com/photo-1558818498-28c1e002b655?w=400&h=300&fit=crop", name: "Lentilles vertes", category: "Légumineuses · Sec", quantity: "4 Tonnes", quality: "B", location: "M'Sila", kiloPrice: 120, totalPrice: 480000, deliveryPrice: 18000, timeLeft: "7j 3h" },
+  { id: 1, image: "https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=400&h=300&fit=crop", name: "Tomates fraîches", category: "Légumes", quantity: "120 kg", quality: "A", location: "Mazida, Béjaïa", kiloPrice: 185, totalPrice: 222000, deliveryPrice: 8000, timeLeft: "2j 14h" },
+  { id: 2, image: "https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=400&h=300&fit=crop", name: "Mangue", category: "Fruits", quantity: "30 kg", quality: "A", location: "Aïn Defla", kiloPrice: 800, totalPrice: 180000, deliveryPrice: 12000, timeLeft: "1j 6h" },
+  { id: 3, image: "https://images.unsplash.com/photo-1574226516831-e1dff420e562?w=400&h=300&fit=crop", name: "Bananes", category: "Fruits", quantity: "500 kg", quality: "A", location: "Biskra", kiloPrice: 750, totalPrice: 375000, deliveryPrice: 9500, timeLeft: "1j 2h" },
+  { id: 4, image: "https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=400&h=300&fit=crop", name: "Carottes", category: "Légumes", quantity: "120 kg", quality: "B", location: "Blida", kiloPrice: 70, totalPrice: 140000, deliveryPrice: 7000, timeLeft: "18h" },
+  { id: 5, image: "https://images.unsplash.com/photo-1506484381205-f7945653044d?w=400&h=300&fit=crop", name: "Poivron", category: "Légumes", quantity: "100 kg", quality: "B", location: "Sétif", kiloPrice: 52, totalPrice: 520000, deliveryPrice: 25000, timeLeft: "6k" },
+  { id: 6, image: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400&h=300&fit=crop", name: "Huile d'olive extra", category: "Huile", quantity: "800 L", quality: "A", location: "Tizi Ouzou", kiloPrice: 1200, totalPrice: 960000, deliveryPrice: 15000, timeLeft: "9h" },
+  { id: 7, image: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400&h=300&fit=crop", name: "Pasteques", category: "Fruits", quantity: "600 kg", quality: "A", location: "Annaba", kiloPrice: 150, totalPrice: 90000, deliveryPrice: 6000, timeLeft: "1j 22h" },
+  { id: 8, image: "https://images.unsplash.com/photo-1558818498-28c1e002b655?w=400&h=300&fit=crop", name: "Tomates", category: "Légumes", quantity: "40 kg", quality: "B", location: "M'Sila", kiloPrice: 120, totalPrice: 480000, deliveryPrice: 18000, timeLeft: "2j 3h" },
 ];
 
-const CATEGORIES = ["Tous", "Légumes", "Fruits", "Céréales", "Légumineuses", "Huile"];
+const CATEGORIES = ["Tous", "Légumes", "Fruits", "Céréales", "Huile"];
 
 // ─── Auth Modal ───────────────────────────────────────────────────────────────
 
