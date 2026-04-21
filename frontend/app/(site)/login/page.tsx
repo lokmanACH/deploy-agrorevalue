@@ -8,9 +8,9 @@ import { Loader2, AlertCircle } from "lucide-react";
 
 const DEV_CREDENTIALS = [
   { role: "admin",   email: "admin@email.com",   password: "1234" },
-  { role: "seller",  email: "seller1@email.com",  password: "1234" },
-  { role: "buyer 1", email: "buyer11@email.com",  password: "1234" },
-  { role: "buyer 2", email: "buyer10@email.com",  password: "1234" },
+  { role: "vendeur",  email: "seller1@email.com",  password: "1234" },
+  { role: "acheteur 1", email: "buyer11@email.com",  password: "1234" },
+  { role: "acheteur 2", email: "buyer10@email.com",  password: "1234" },
 ];
 
 export default function LoginPage() {
@@ -131,38 +131,47 @@ export default function LoginPage() {
         </form>
       </div>
 
-      {/* Dev credential switcher */}
+      {/* Dev credentials */}
+      
+      <button
+        type="button"
+        onClick={() => setDevOpen(!devOpen)}
+        className="fixed bottom-3 right-3 z-10"
+      >
+        <span className="fixed bottom-3 right-3 z-10 text-[12px] px-2 py-1 rounded border border-zinc-200 dark:border-zinc-700 text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800">
+          Clickez pour tester avec des comptes pré-remplis
+        </span>
+      </button>
+      {devOpen && (
       <div className="fixed bottom-0 right-0 p-3 font-mono">
-          <div className="mb-2 min-w-50 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-3 shadow-sm">
-            <p className="text-[10px] uppercase tracking-widest text-zinc-400 mb-2">
-              dev credentials
-            </p>
-            {DEV_CREDENTIALS.map((c, i) => (
-              <div
-                key={c.email}
-                className="flex items-center justify-between gap-2 py-1.5 border-b border-zinc-100 dark:border-zinc-800 last:border-0"
-              >
-                <div className="flex flex-col">
-                  <span className="text-[10px] text-zinc-400">{c.role}</span>
-                  <span className="text-xs text-zinc-700 dark:text-zinc-300">{c.email}</span>
-                  <span className="text-xs text-zinc-700 dark:text-zinc-300">{c.password}</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => loginAs(i)}
-                  className={`text-[10px] px-2 py-1 rounded border transition-colors ${
-                    activeCredential === i
-                      ? "bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 border-transparent"
-                      : "border-zinc-200 dark:border-zinc-700 text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800"
-                  }`}
-                >
-                  {activeCredential === i ? "active" : "use"}
-                </button>
+        <div className="mb-2 min-w-50 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-3 shadow-sm">
+          {DEV_CREDENTIALS.map((c, i) => (
+            <div
+              key={c.email}
+              className="flex items-center justify-between gap-2 py-1.5 border-b border-zinc-100 dark:border-zinc-800 last:border-0"
+            >
+              <div className="flex flex-col">
+                <span className="text-[10px] text-zinc-400">{c.role}</span>
+                <span className="text-xs text-zinc-700 dark:text-zinc-300">{c.email}</span>
+                <span className="text-xs text-zinc-700 dark:text-zinc-300">{c.password}</span>
               </div>
-            ))}
-          </div>
+              <button
+                type="button"
+                onClick={() => loginAs(i)}
+                className={`text-[10px] px-2 py-1 rounded border transition-colors ${
+                  activeCredential === i
+                    ? "bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 border-transparent"
+                    : "border-zinc-200 dark:border-zinc-700 text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                }`}
+              >
+                {activeCredential === i ? "activé" : "utiliser"}
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
-
-    </div>
+      )}
+    
+    </div> 
   );
 }
