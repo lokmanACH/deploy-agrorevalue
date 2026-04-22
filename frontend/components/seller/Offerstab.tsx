@@ -3,8 +3,7 @@
 import { useState } from "react";
 import {
   Plus, Package, MapPin, Clock, Trash2, TrendingUp, BadgeCheck,
-  Users, ChevronDown, Award, Pencil, X, Loader2, AlertCircle,
-  Phone, Mail,
+  Hourglass, Users, ChevronDown, Award, Pencil, X, Loader2, AlertCircle,
 } from "lucide-react";
 import { api } from "@/utils/apiClient";
 
@@ -13,9 +12,6 @@ import { api } from "@/utils/apiClient";
 interface Allocation {
   id: number;
   buyerName: string;
-  buyerId: number;
-  buyerEmail?: string | null;
-  buyerPhone?: string | null;
   quantity: number;
   finalPrice: number;
   order: number;
@@ -27,7 +23,6 @@ interface Buyer {
   name: string;
   quantity: string;
   proposedPrice: number;
-  bidHistory?: { price: number; timestamp: string }[];
 }
 
 interface Offer {
@@ -42,7 +37,7 @@ interface Offer {
   totalPrice: number;
   deliveryPrice: number;
   timeLeft: string;
-  status: "active" | "closed";
+  status: "active" | "pending" | "sold" | "expired";
   offers: number;
   buyers?: Buyer[];
   allocations?: Allocation[];
@@ -51,175 +46,14 @@ interface Offer {
 // ─── Config ───────────────────────────────────────────────────────────────────
 
 const statusConfig = {
-  active:  { label: "Active",   className: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800" },
-  closed:  { label: "Fermée",   className: "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700" },
+  active:  { label: "Active",      className: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800" },
+  pending: { label: "En attente",  className: "bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 border-amber-200 dark:border-amber-800" },
+  sold:    { label: "Vendu",       className: "bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400 border-blue-200 dark:border-blue-800" },
+  expired: { label: "Expirée",     className: "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700" },
 };
 
 const inputCls = "w-full h-10 px-3 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-sm text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all";
 const labelCls = "block text-sm text-zinc-500 dark:text-zinc-400 mb-1.5";
-
-// ─── BidHistoryChart ──────────────────────────────────────────────────────────
-
-function BidHistoryChart({ history }: { history: { price: number; timestamp: string }[] | undefined }) {
-  if (!history || history.length === 0) return null;
-
-  const prices = history.map((h) => h.price);
-  const maxPrice = Math.max(...prices);
-  const minPrice = Math.min(...prices);
-  const range = maxPrice - minPrice || maxPrice * 0.1;
-  const chartHeight = 40;
-  const barWidth = Math.max(6, 60 / history.length);
-  const gap = Math.max(2, 60 / history.length - 4);
-
-  return (
-    <div className="mt-2 flex items-end gap-1" title={`Historique des offres: ${prices.join(", ")} DA/kg`}>
-      {prices.map((price, i) => {
-        const heightPercent = ((price - minPrice) / range) * 100;
-        const height = (heightPercent / 100) * chartHeight;
-
-        return (
-          <div
-            key={i}
-            className="flex flex-col items-center gap-0.5 flex-1"
-          >
-            <div
-              className="w-full bg-gradient-to-t from-blue-500 to-blue-400 dark:from-blue-600 dark:to-blue-500 rounded-sm opacity-75 hover:opacity-100 transition-opacity"
-              style={{ height: `${height}px`, minHeight: "4px" }}
-              title={`${price} DA/kg`}
-            />
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-// ─── ManualAllocationModal ────────────────────────────────────────────────────
-
-interface ManualAllocationModalProps {
-  offer: Offer;
-  onClose: () => void;
-  onAllocated: () => void;
-}
-
-function ManualAllocationModal({ offer, onClose, onAllocated }: ManualAllocationModalProps) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const buyers = offer.buyers ?? [];
-
-  const handleAllocate = async () => {
-    if (buyers.length === 0) {
-      setError("Aucun acheteur à allouer.");
-      return;
-    }
-
-    try {
-      setLoading(true);
-      setError(null);
-
-      // Create allocation for each buyer in order
-      for (let order = 0; order < buyers.length; order++) {
-        const buyer = buyers[order];
-        const quantity = parseInt(buyer.quantity);
-
-        await api.post("allocations", {
-          product_id: offer.id,
-          buyer_id: buyer.buyerId,
-          bid_id: buyer.bidId,
-          allocated_quantity: quantity,
-          final_price: buyer.proposedPrice * quantity + offer.deliveryPrice,
-          order: order + 1,
-          created_at: new Date().toISOString(),
-        });
-      }
-
-      // Update product status to closed
-      await api.put(`products/${offer.id}`, {
-        status: "closed",
-      });
-
-      onAllocated();
-      onClose();
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Erreur lors de l'allocation manuelle");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-900/60 backdrop-blur-sm">
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl w-full max-w-md p-6 relative">
-        <button
-          onClick={onClose}
-          disabled={loading}
-          className="absolute top-4 right-4 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors disabled:opacity-50"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 flex items-center justify-center shrink-0">
-            <Award className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-          </div>
-          <div>
-            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
-              Finaliser les allocations
-            </h2>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Cela fermera l'enchère immédiatement.
-            </p>
-          </div>
-        </div>
-
-        <div className="bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-4 py-3 mb-4">
-          <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50 truncate">{offer.name}</p>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
-            {buyers.length} acheteur{buyers.length > 1 ? "s" : ""} à allouer
-          </p>
-        </div>
-
-        <div className="max-h-60 overflow-y-auto mb-4 space-y-2">
-          {buyers.map((buyer, idx) => (
-            <div key={buyer.bidId} className="flex items-center justify-between px-3 py-2 bg-zinc-50 dark:bg-zinc-900 rounded-lg text-sm">
-              <div className="flex items-center gap-2">
-                <span className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-950/50 flex items-center justify-center text-xs font-bold text-emerald-700 dark:text-emerald-400">
-                  {idx + 1}
-                </span>
-                <span className="font-medium text-zinc-900 dark:text-zinc-50">{buyer.name}</span>
-              </div>
-              <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{buyer.proposedPrice} DA/kg</span>
-            </div>
-          ))}
-        </div>
-
-        {error && (
-          <div className="mb-4 flex items-start gap-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 p-3 rounded-lg border border-red-200 dark:border-red-800">
-            <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
-            <p>{error}</p>
-          </div>
-        )}
-
-        <div className="flex gap-3">
-          <button
-            onClick={onClose}
-            disabled={loading}
-            className="flex-1 h-10 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
-          >
-            Annuler
-          </button>
-          <button
-            onClick={handleAllocate}
-            disabled={loading}
-            className="flex-1 h-10 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
-          >
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Finaliser"}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // ─── EditModal ────────────────────────────────────────────────────────────────
 
@@ -363,17 +197,10 @@ function EditModal({ offer, onClose, onSaved }: EditModalProps) {
               className={inputCls}
               disabled={loading}
             >
+              <option value="active">Active</option>
+              <option value="pending">En attente</option>
               <option value="closed">Fermée</option>
-              <option value="active" disabled={offer.allocations && offer.allocations.length > 0}>
-                Active {offer.allocations && offer.allocations.length > 0 ? "(Non disponible - Produit alloué)" : ""}
-              </option>
             </select>
-            {offer.allocations && offer.allocations.length > 0 && (
-              <p className="mt-2 text-sm text-amber-600 dark:text-amber-400 flex items-center gap-2">
-                <AlertCircle className="w-4 h-4" />
-                Ce produit a déjà été alloué et ne peut pas être réactivé.
-              </p>
-            )}
           </div>
 
           {/* Computed total preview */}
@@ -381,10 +208,7 @@ function EditModal({ offer, onClose, onSaved }: EditModalProps) {
             <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl px-4 py-3 flex items-center justify-between">
               <span className="text-sm text-emerald-700 dark:text-emerald-400">Prix total estimé</span>
               <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">
-                {(() => {
-                  const total = Number(form.quantity) * Number(form.kiloPrice);
-                  return isNaN(total) ? "0" : total.toLocaleString("fr-DZ");
-                })()} DA
+                {(Number(form.quantity) * Number(form.kiloPrice)).toLocaleString("fr-DZ")} DA
               </span>
             </div>
           )}
@@ -498,12 +322,14 @@ function DeleteConfirmModal({ offer, onClose, onConfirmed }: DeleteConfirmProps)
 // ─── StatsBar ─────────────────────────────────────────────────────────────────
 
 function StatsBar({ offers }: { offers: Offer[] }) {
-  const active = offers.filter((o) => o.status === "active").length;
-  const closed = offers.filter((o) => o.status === "closed").length;
+  const active  = offers.filter((o) => o.status === "active").length;
+  const sold    = offers.filter((o) => o.status === "sold").length;
+  const pending = offers.filter((o) => o.status === "pending").length;
 
   const stats = [
-    { label: "Offres actives", value: active, icon: TrendingUp, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-950/30" },
-    { label: "Enchères fermées", value: closed, icon: BadgeCheck, color: "text-blue-600 dark:text-blue-400", bg: "bg-blue-50 dark:bg-blue-950/30" },
+    { label: "Offres actives",  value: active,  icon: TrendingUp, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 dark:bg-emerald-950/30" },
+    { label: "Ventes conclues", value: sold,    icon: BadgeCheck, color: "text-blue-600 dark:text-blue-400",       bg: "bg-blue-50 dark:bg-blue-950/30" },
+    { label: "En attente",      value: pending, icon: Hourglass,  color: "text-amber-600 dark:text-amber-400",     bg: "bg-amber-50 dark:bg-amber-950/30" },
   ];
 
   return (
@@ -538,12 +364,11 @@ function OfferRow({ offer, onDelete, onUpdate }: OfferRowProps) {
   const [expanded,     setExpanded]     = useState(false);
   const [showEdit,     setShowEdit]     = useState(false);
   const [showDeleteDlg, setShowDeleteDlg] = useState(false);
-  const [showAllocate, setShowAllocate] = useState(false);
 
-  const cfg        = statusConfig[offer.status] || statusConfig.closed;
+  const cfg        = statusConfig[offer.status];
   const buyers     = offer.buyers     ?? [];
   const allocations = offer.allocations ?? [];
-  const isSold     = offer.status === "closed" && allocations.length > 0;
+  const isSold     = offer.status === "sold" && allocations.length > 0;
 
   return (
     <>
@@ -644,36 +469,16 @@ function OfferRow({ offer, onDelete, onUpdate }: OfferRowProps) {
                   {allocations.map((alloc) => (
                     <div
                       key={alloc.id}
-                      className="flex items-start gap-3 px-3 py-2.5 bg-gradient-to-r from-emerald-50 to-emerald-50/50 dark:from-emerald-950/30 dark:to-emerald-950/10 rounded-lg border border-emerald-100 dark:border-emerald-900/30"
+                      className="flex items-center gap-3 px-3 py-2.5 bg-gradient-to-r from-emerald-50 to-emerald-50/50 dark:from-emerald-950/30 dark:to-emerald-950/10 rounded-lg border border-emerald-100 dark:border-emerald-900/30"
                     >
                       <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/60 flex items-center justify-center text-xs font-bold text-emerald-700 dark:text-emerald-400 shrink-0">
                         {alloc.order}
                       </div>
-                      <div className="flex-1 min-w-0">
+                      <div className="flex-1">
                         <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50 truncate">{alloc.buyerName}</p>
                         <p className="text-xs text-zinc-500 dark:text-zinc-400">{alloc.quantity} kg</p>
-                        <div className="flex items-center gap-2 mt-1.5">
-                          {alloc.buyerPhone && (
-                            <a
-                              href={`tel:${alloc.buyerPhone}`}
-                              title={alloc.buyerPhone}
-                              className="p-1.5 rounded-lg bg-white dark:bg-zinc-900 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950 transition-colors"
-                            >
-                              <Phone className="w-4 h-4" />
-                            </a>
-                          )}
-                          {alloc.buyerEmail && (
-                            <a
-                              href={`mailto:${alloc.buyerEmail}`}
-                              title={alloc.buyerEmail}
-                              className="p-1.5 rounded-lg bg-white dark:bg-zinc-900 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950 transition-colors"
-                            >
-                              <Mail className="w-4 h-4" />
-                            </a>
-                          )}
-                        </div>
                       </div>
-                      <div className="text-right shrink-0">
+                      <div className="text-right">
                         <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
                           {alloc.finalPrice.toLocaleString("fr-DZ")} DA
                         </p>
@@ -695,45 +500,31 @@ function OfferRow({ offer, onDelete, onUpdate }: OfferRowProps) {
                     Aucune proposition pour le moment.
                   </p>
                 ) : (
-                  <>
-                    <div className="space-y-3 mb-4">
-                      {buyers.map((buyer) => (
-                        <div
-                          key={buyer.bidId}
-                          className="flex items-start gap-3 px-3 py-2.5 bg-zinc-50 dark:bg-zinc-900 rounded-lg"
-                        >
-                          <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-950/50 flex items-center justify-center text-xs font-semibold text-blue-700 dark:text-blue-400 shrink-0">
-                            {buyer.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between gap-2">
-                              <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50 truncate">
-                                {buyer.name}
-                              </span>
-                              <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 shrink-0">
-                                {buyer.proposedPrice} DA/kg
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
-                              <span>{buyer.quantity}</span>
-                              <span>•</span>
-                              <span>
-                                Total: {(buyer.proposedPrice * parseInt(buyer.quantity)).toLocaleString("fr-DZ")} DA
-                              </span>
-                            </div>
-                            <BidHistoryChart history={buyer.bidHistory} />
-                          </div>
+                  <div className="space-y-2">
+                    {buyers.map((buyer) => (
+                      <div
+                        key={buyer.bidId}
+                        className="flex items-center gap-3 px-3 py-2.5 bg-zinc-50 dark:bg-zinc-900 rounded-lg"
+                      >
+                        <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-950/50 flex items-center justify-center text-xs font-semibold text-blue-700 dark:text-blue-400 shrink-0">
+                          {buyer.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
                         </div>
-                      ))}
-                    </div>
-                    <button
-                      onClick={() => setShowAllocate(true)}
-                      className="w-full h-9 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
-                    >
-                      <Award className="w-4 h-4" />
-                      Finaliser les allocations
-                    </button>
-                  </>
+                        <span className="flex-1 text-sm font-medium text-zinc-900 dark:text-zinc-50 truncate">
+                          {buyer.name}
+                        </span>
+                        <span className="text-xs text-zinc-500 dark:text-zinc-400 mr-3">{buyer.quantity}</span>
+                        <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+                          {buyer.proposedPrice} DA/kg
+                        </span>
+                        <div className="ml-4 flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400">
+                          Total :{" "}
+                          <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+                            {(buyer.proposedPrice * parseInt(buyer.quantity)).toLocaleString("fr-DZ")} DA
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </>
             )}
@@ -759,16 +550,6 @@ function OfferRow({ offer, onDelete, onUpdate }: OfferRowProps) {
           onConfirmed={(id) => {
             onDelete(id);
             setShowDeleteDlg(false);
-          }}
-        />
-      )}
-      {showAllocate && (
-        <ManualAllocationModal
-          offer={offer}
-          onClose={() => setShowAllocate(false)}
-          onAllocated={() => {
-            onUpdate({ id: offer.id, status: "closed" });
-            setShowAllocate(false);
           }}
         />
       )}

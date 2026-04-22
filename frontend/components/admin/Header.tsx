@@ -27,8 +27,6 @@ export function Header({ setSidebarOpen }: HeaderProps) {
   );
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setIsSearchOpen(false);
@@ -40,13 +38,10 @@ export function Header({ setSidebarOpen }: HeaderProps) {
 
   useEffect(() => {
     // Check initial state after hydration
-    if (typeof window === 'undefined') return;
     setIsDark(document.documentElement.classList.contains("dark"));
   }, []);
 
   const toggleTheme = () => {
-    if (typeof window === 'undefined') return;
-    
     if (document.documentElement.classList.contains("dark")) {
       document.documentElement.classList.remove("dark");
       localStorage.setItem("theme", "light");

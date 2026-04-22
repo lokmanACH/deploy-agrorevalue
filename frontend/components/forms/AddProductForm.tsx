@@ -80,11 +80,11 @@ export function AddProductForm({ onSuccess }: AddProductFormProps) {
   const [wilayas, setWilayas] = useState<RawWilaya[]>([]);
   const [communes, setCommunes] = useState<RawCommune[]>([]);
   const [filteredCommunes, setFilteredCommunes] = useState<RawCommune[]>([]);
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
-  const [imageNames, setImageNames] = useState<string[]>([]);
+  const [imageName, setImageName] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   // Load categories, wilayas and communes on mount
   useEffect(() => {
@@ -143,16 +143,11 @@ export function AddProductForm({ onSuccess }: AddProductFormProps) {
     setForm((prev) => ({ ...prev, [field]: value }));
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length > 0) {
-      setImageFiles((prev) => [...prev, ...files]);
-      setImageNames((prev) => [...prev, ...files.map((f) => f.name)]);
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      setImageName(file.name);
     }
-  };
-
-  const removeImage = (index: number) => {
-    setImageFiles((prev) => prev.filter((_, i) => i !== index));
-    setImageNames((prev) => prev.filter((_, i) => i !== index));
   };
 
   const uploadImage = async (file: File): Promise<string> => {
@@ -164,12 +159,11 @@ export function AddProductForm({ onSuccess }: AddProductFormProps) {
           const base64String = e.target?.result as string;
           
           const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-          const token = typeof window !== 'undefined' ? localStorage.getItem('agro_token') : null;
           const response = await fetch(`${apiUrl}/api/upload`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`,
+              "Authorization": `Bearer ${localStorage.getItem('agro_token')}`,
             },
             body: JSON.stringify({ image: base64String }),
           });
@@ -266,13 +260,10 @@ export function AddProductForm({ onSuccess }: AddProductFormProps) {
       const now = new Date();
       const endTime = new Date(now.getTime() + durationMinutes * 60000);
 
-      // Upload all images if provided
-      const imageUrls: string[] = [];
-      if (imageFiles.length > 0) {
-        for (const file of imageFiles) {
-          const imageUrl = await uploadImage(file);
-          imageUrls.push(imageUrl);
-        }
+      // Upload image if provided
+      let imageUrl: string | null = null;
+      if (imageFile) {
+        imageUrl = await uploadImage(imageFile);
       }
 
       // Create product object
@@ -295,20 +286,18 @@ export function AddProductForm({ onSuccess }: AddProductFormProps) {
       // Submit product to backend
       const createdProduct = await api.post<{ id: number }>("products", newProduct);
 
-      // If images were uploaded, create product_images records for each
-      if (imageUrls.length > 0 && createdProduct.id) {
-        for (const imageUrl of imageUrls) {
-          await api.post("product_images", {
-            product_id: createdProduct.id,
-            image_url: imageUrl,
-          });
-        }
+      // If image was uploaded, create product_images record
+      if (imageUrl && createdProduct.id) {
+        await api.post("product_images", {
+          product_id: createdProduct.id,
+          image_url: imageUrl,
+        });
       }
 
       // Reset form
       setForm(EMPTY_FORM);
-      setImageFiles([]);
-      setImageNames([]);
+      setImageName("");
+      setImageFile(null);
       // Call success callback
       onSuccess();
     } catch (err: any) {
@@ -339,42 +328,22 @@ export function AddProductForm({ onSuccess }: AddProductFormProps) {
 
         {/* Image upload */}
         <div>
-          <label className={labelCls}>Photos du lot</label>
+          <label className={labelCls}>Photo du lot</label>
           <label className="flex flex-col items-center justify-center h-32 border border-dashed border-zinc-300 dark:border-zinc-700 rounded-xl cursor-pointer hover:border-emerald-400 dark:hover:border-emerald-600 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all group">
-            <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageChange} disabled={loading} />
-            {imageNames.length > 0 ? (
-              <div className="flex flex-col items-center gap-2 text-sm text-emerald-600 dark:text-emerald-400">
+            <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} disabled={loading} />
+            {imageName ? (
+              <div className="flex items-center gap-2 text-sm text-emerald-600 dark:text-emerald-400">
                 <BadgeCheck className="w-4 h-4" />
-                <span>{imageNames.length} photo{imageNames.length > 1 ? "s" : ""} sélectionnée{imageNames.length > 1 ? "s" : ""}</span>
+                <span className="truncate max-w-xs">{imageName}</span>
               </div>
             ) : (
               <>
                 <Upload className="w-5 h-5 text-zinc-400 group-hover:text-emerald-500 transition-colors mb-1.5" />
-                <span className="text-sm text-zinc-500 dark:text-zinc-400">Cliquez pour uploader des photos</span>
-                <span className="text-xs text-zinc-400 mt-0.5">PNG, JPG jusqu'à 5 MB chacun</span>
+                <span className="text-sm text-zinc-500 dark:text-zinc-400">Cliquez pour uploader une photo</span>
+                <span className="text-xs text-zinc-400 mt-0.5">PNG, JPG jusqu'à 5 MB</span>
               </>
             )}
           </label>
-          {imageNames.length > 0 && (
-            <div className="mt-3 space-y-2">
-              <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Photos uploadées:</p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {imageNames.map((name, idx) => (
-                  <div key={idx} className="flex items-center justify-between gap-2 px-3 py-2 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg">
-                    <span className="text-xs text-emerald-700 dark:text-emerald-400 truncate">{name}</span>
-                    <button
-                      type="button"
-                      onClick={() => removeImage(idx)}
-                      disabled={loading}
-                      className="text-emerald-600 dark:text-emerald-400 hover:text-red-600 dark:hover:text-red-400 transition-colors disabled:opacity-50"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Name + category */}

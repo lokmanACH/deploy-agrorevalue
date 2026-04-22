@@ -38,18 +38,6 @@ export function BuyModal({ product, onClose }: BuyModalProps) {
         ? parseFloat(product.quantity) 
         : product.quantity;
 
-      // Delete all existing allocations for this product
-      try {
-        const allocationsRes = await api.get<any>(`allocations?product_id=${product.id}`);
-        if (allocationsRes && Array.isArray(allocationsRes)) {
-          for (const alloc of allocationsRes) {
-            await api.delete(`allocations/${alloc.id}`);
-          }
-        }
-      } catch (err) {
-        console.warn("Could not fetch/delete existing allocations:", err);
-      }
-
       const obj = {
         product_id: product.id,
         buyer_id: user.id,

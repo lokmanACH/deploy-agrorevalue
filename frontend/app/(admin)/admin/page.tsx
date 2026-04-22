@@ -51,18 +51,12 @@ function Skeleton({ className = "", style }: { className?: string; style?: React
 
 export default function AdminDashboardPage() {
   const [timeframe, setTimeframe] = useState("Cette année");
-  const [skeletonHeights, setSkeletonHeights] = useState<number[]>([]);
 
   const [users, setUsers] = useState<User[]>([]);
   const [revenue, setRevenue] = useState<Revenue[]>([]);
   const [bids, setBids] = useState<Bid[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // ── Initialize skeleton heights on mount ──────────────────────────────────
-  useEffect(() => {
-    setSkeletonHeights(Array(12).fill(0).map(() => Math.random() * 60 + 20));
-  }, []);
 
   // ── Fetch all data on mount ───────────────────────────────────────────────
   useEffect(() => {
@@ -268,11 +262,11 @@ export default function AdminDashboardPage() {
 
           {loading ? (
             <div className="h-[300px] flex items-end justify-between gap-2 pb-6">
-              {skeletonHeights.map((height, i) => (
+              {Array(12).fill(0).map((_, i) => (
                 <Skeleton
                   key={i}
                   className="flex-1"
-                  style={{ height: `${height}%` }}
+                  style={{ height: `${Math.random() * 60 + 20}%` }}
                 />
               ))}
             </div>
