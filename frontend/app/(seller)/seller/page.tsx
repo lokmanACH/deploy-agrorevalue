@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Plus, Package, X, BadgeCheck, Loader2, AlertCircle } from "lucide-react";
 import { AddProductForm } from "@/components/forms/AddProductForm";
 import { OffersTab } from "@/components/seller/Offerstab";
+import { DonateForm } from "@/components/forms/DonateForm";
 import { api, getUser, formatImageUrl } from "@/utils/apiClient";
 
 // ─── Backend types ────────────────────────────────────────────────────────────
@@ -152,7 +153,7 @@ interface Allocation {
   order: number;
 }
 
-type Tab = "add" | "offers";
+type Tab = "add" | "offers" | "donate";
 
 // ─── Helper functions ──────────────────────────────────────────────────────────
 
@@ -507,6 +508,17 @@ export default function SellerDashboardPage() {
                 {offers.filter((o) => o.status === "active").length}
               </span>
             </button>
+            <button
+              onClick={() => setTab("donate")}
+              className={`flex items-center gap-2 h-8 px-4 rounded-md text-sm font-medium transition-all ${
+                tab === "donate"
+                  ? "bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 shadow-sm"
+                  : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300"
+              }`}
+            >
+              <Package className="w-4 h-4" />
+              Faire un don
+            </button>
           </div>
         </div>
       </div>
@@ -542,6 +554,7 @@ export default function SellerDashboardPage() {
                 onAddNew={() => setTab("add")}
               />
             )}
+            {tab === "donate" && <DonateForm />}
           </>
         )}
       </div>
