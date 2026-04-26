@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icons } from "./Icons";
-import { useState } from "react";
 import { LogOut } from "lucide-react";
 
 interface SidebarProps {
@@ -18,6 +17,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
     { name: "Tableau de Bord", href: "/admin", icon: Icons.dashboard },
     { name: "Acheteurs", href: "/admin/buyers", icon: Icons.users },
     { name: "Vendeurs", href: "/admin/sellers", icon: Icons.wallet },
+    { name: "Associations", href: "/admin/associations", icon: Icons.building2 },
     { name: "Paramètres", href: "/admin/settings", icon: Icons.settings },
   ];
 

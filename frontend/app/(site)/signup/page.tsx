@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ShoppingCart, Store } from "lucide-react";
+import { ShoppingCart, Store, Building2} from "lucide-react";
 
-type AccountType = "buyer" | "seller" | null;
+type AccountType = "buyer" | "seller" | "association" | null;
 
 const PRODUCTS = [
   "Céréales", "Légumineuses", "Fruits frais", "Légumes",
@@ -92,8 +92,8 @@ export default function RegisterPage() {
                 <label className="block text-sm text-zinc-500 dark:text-zinc-400 mb-2">
                   Type de compte
                 </label>
-                <div className="grid grid-cols-2 gap-3">
-                  {(["buyer", "seller"] as const).map((type) => (
+                <div className="grid grid-cols-3 gap-3">
+                  {(["buyer", "seller", "association"] as const).map((type) => (
                     <button
                       key={type}
                       onClick={() => setAccountType(type)}
@@ -110,14 +110,16 @@ export default function RegisterPage() {
                       }`}>
                         {type === "buyer"
                           ? <ShoppingCart className={`w-4 h-4 ${accountType === type ? "text-emerald-600 dark:text-emerald-400" : "text-zinc-500 dark:text-zinc-400"}`} />
-                          : <Store className={`w-4 h-4 ${accountType === type ? "text-emerald-600 dark:text-emerald-400" : "text-zinc-500 dark:text-zinc-400"}`} />
+                          : type === "seller"
+                          ? <Store className={`w-4 h-4 ${accountType === type ? "text-emerald-600 dark:text-emerald-400" : "text-zinc-500 dark:text-zinc-400"}`} />
+                          : <Building2 className={`w-4 h-4 ${accountType === type ? "text-emerald-600 dark:text-emerald-400" : "text-zinc-500 dark:text-zinc-400"}`} />
                         }
                       </div>
                       <span className={`text-sm font-medium ${accountType === type ? "text-emerald-700 dark:text-emerald-400" : "text-zinc-700 dark:text-zinc-300"}`}>
-                        {type === "buyer" ? "Acheteur" : "Vendeur"}
+                        {type === "buyer" ? "Acheteur" : type === "seller" ? "Vendeur" : "Association"}
                       </span>
                       <span className="text-xs text-zinc-400 dark:text-zinc-500">
-                        {type === "buyer" ? "Acheter des lots agricoles" : "Mettre en vente des lots"}
+                        {type === "buyer" ? "Acheter des lots agricoles" : type === "seller" ? "Mettre en vente des lots" : "Collecter des dons"}
                       </span>
                     </button>
                   ))}
