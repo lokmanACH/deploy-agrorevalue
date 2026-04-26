@@ -29,6 +29,20 @@
             "created_at": "2026-04-01"
         },
         {
+            "id": 2,
+            "company_name": "Green Valley",
+            "email": "seller2@email.com",
+            "password_hash": "1234",
+            "phone": "0770000002",
+            "role": "seller",
+            "is_verified": true,
+            "first_name": "mohamed",
+            "last_name": "benziout",
+            "avatar": "https://example.com/avatar2.jpg",
+            "is_active": true,
+            "created_at": "2026-04-01"
+        },
+        {
             "id": 24,
             "company_name": "Organic DZ",
             "email": "buyer11@email.com",
@@ -52,6 +66,20 @@
             "is_verified": true,
             "first_name": "Mohammed Ali",
             "last_name": "Said",
+            "avatar": "https://example.com/avatar11.jpg",
+            "is_active": true,
+            "created_at": "2026-04-01"
+        },
+        {
+            "id": 26,
+            "company_name": "Association Agri DZ",
+            "email": "association@email.com",
+            "password_hash": "1234",
+            "phone": "0660000098",
+            "role": "association",
+            "is_verified": true,
+            "first_name": "Djamel Eddine",
+            "last_name": "Zitouni",
             "avatar": "https://example.com/avatar11.jpg",
             "is_active": true,
             "created_at": "2026-04-01"

@@ -9,8 +9,10 @@ import { Loader2, AlertCircle } from "lucide-react";
 const DEV_CREDENTIALS = [
   { role: "admin",   email: "admin@email.com",   password: "1234" },
   { role: "vendeur",  email: "seller1@email.com",  password: "1234" },
+  { role: "vendeur",  email: "seller2@email.com",  password: "1234" },
   { role: "acheteur 1", email: "buyer11@email.com",  password: "1234" },
   { role: "acheteur 2", email: "buyer10@email.com",  password: "1234" },
+  { role: "association", email: "association@email.com",  password: "1234" },
 ];
 
 export default function LoginPage() {
@@ -43,6 +45,7 @@ export default function LoginPage() {
       if (user.role === "buyer")       router.push("/buyer");
       else if (user.role === "seller") router.push("/seller");
       else if (user.role === "admin")  router.push("/admin");
+      else if (user.role === "association")  router.push("/association");
       else router.push("/");
     } catch (err: any) {
       setError(err.message || "Erreur de connexion");

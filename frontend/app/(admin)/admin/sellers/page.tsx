@@ -260,7 +260,7 @@ export default function SellersPage() {
     <div className="space-y-6 relative">
       {/* Toast */}
       {toast && (
-        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-3 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-4 py-3 rounded-xl shadow-2xl text-sm font-medium">
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 px-4 py-3 rounded-xl shadow-2xl text-sm font-medium">
           <svg className="w-4 h-4 text-emerald-400 dark:text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
@@ -324,7 +324,7 @@ export default function SellersPage() {
             />
           </div>
           <div className="flex gap-2 w-full sm:w-auto">
-            <div className="relative flex items-center bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg px-2 text-sm min-w-[170px]">
+            <div className="relative flex items-center bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg px-2 text-sm min-w-max">
               <Icons.dashboard className="w-4 h-4 text-zinc-400 ml-2 shrink-0" />
               <select
                 value={statusFilter}
