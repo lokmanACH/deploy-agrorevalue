@@ -34,8 +34,8 @@ export const CharitableOrganizations = ({
   useEffect(() => {
     const load = async () => {
       try {
-        const response = await api.get("/api/organizations");
-        setOrganizations(response.data || []);
+        const response = await api.get<Organization[]>("/api/organizations");
+        setOrganizations(response ?? []);
       } catch (err) {
         console.error("Error loading organizations:", err);
         setError("Impossible de charger les organisations");
