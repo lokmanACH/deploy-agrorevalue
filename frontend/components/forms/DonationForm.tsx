@@ -76,7 +76,7 @@ export const DonationForm = ({
         const [productsRes, categoriesRes] = await Promise.all([
           api.get(`/api/products?seller_id=${user.id}`),
           api.get("/api/categories"),
-        ]);
+        ]) as [{ data: RawProduct[] }, { data: RawCategory[] }];
 
         setProducts(productsRes.data || []);
         setCategories(categoriesRes.data || []);
