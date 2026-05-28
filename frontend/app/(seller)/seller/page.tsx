@@ -13,6 +13,9 @@ import { AddProductForm } from "@/components/forms/AddProductForm";
 import { OffersTab } from "@/components/seller/Offerstab";
 import { api, getUser, formatImageUrl } from "@/utils/apiClient";
 
+
+
+
 // ─── Backend types ────────────────────────────────────────────────────────────
 // These types represent the raw data structures returned by the backend API.
 interface RawProduct {

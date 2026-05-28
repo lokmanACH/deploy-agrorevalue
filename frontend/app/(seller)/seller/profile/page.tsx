@@ -1,22 +1,33 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   User, Mail, Phone, MapPin, Building2, Lock, Pencil, Camera, CheckCircle
 } from "lucide-react";
-
 // Mock user data
+
 const data = JSON.parse(localStorage.getItem("agro_user") || "{}");
+// const mockUser = {
+//   _id: data._id || "1",
+//   firstName: data.first_name || "Chemseddine",
+//   lastName: data.last_name || "Lhajri",
+//   email: data.email || "chemsouhajra@example.com",
+//   phone: data.phone || "+213 555 123 456",
+//   company: data.company_name || "El baraka superette",
+//   wilaya:"Constantine",
+// };
+// console.log(JSON.parse(localStorage.getItem("agro_user") || "{} "));
 const mockUser = {
-  _id: data._id || "1",
-  firstName: data.first_name || "Chemseddine",
-  lastName: data.last_name || "Lhajri",
-  email: data.email || "chemsouhajra@example.com",
-  phone: data.phone || "+213 555 123 456",
-  company: data.company_name || "El baraka superette",
-  wilaya:"Constantine",
+  _id: "1",
+  firstName: "Chemseddine",
+  lastName: "Lhajri",
+  email: "chemsouhajra@example.com",
+  phone: "+213 555 123 456",
+  company: "El baraka superette",
+  wilaya: "Constantine",
 };
-console.log(JSON.parse(localStorage.getItem("agro_user") || "{} "));
+
+
 
 // ─── Input field ──────────────────────────────────────────────────────────────
 
@@ -65,7 +76,21 @@ function InputField({
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function BuyerProfilePage() {
-  const [user] = useState(mockUser);
+  const [user, setUser] = useState(mockUser);
+
+useEffect(() => {
+  const data = JSON.parse(localStorage.getItem("agro_user") || "{}");
+
+  setUser({
+    _id: data._id || "1",
+    firstName: data.first_name || "Chemseddine",
+    lastName: data.last_name || "Lhajri",
+    email: data.email || "chemsouhajra@example.com",
+    phone: data.phone || "+213 555 123 456",
+    company: data.company_name || "El baraka superette",
+    wilaya: "Constantine",
+  });
+}, []);
 
   const [editMode, setEditMode] = useState(false);
   const [firstName, setFirstName] = useState(user.firstName || "");
