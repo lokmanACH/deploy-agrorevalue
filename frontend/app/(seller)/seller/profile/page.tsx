@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 // Mock user data
 
-const data = JSON.parse(localStorage.getItem("agro_user") || "{}");
+// const data = JSON.parse(localStorage.getItem("agro_user") || "{}");
 // const mockUser = {
 //   _id: data._id || "1",
 //   firstName: data.first_name || "Chemseddine",
