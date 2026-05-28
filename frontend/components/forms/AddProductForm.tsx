@@ -256,9 +256,17 @@ export function AddProductForm({ onSuccess }: AddProductFormProps) {
       }
 
       // Calculate end_time based on duration
-      const durationMinutes = durationToMinutes(form.duration);
       const now = new Date();
-      const endTime = new Date(now.getTime() + durationMinutes * 60000);
+      let endTime: Date;
+      
+      if (form.quality === "A" || form.quality === "B") {
+        // For premium qualities (A/B), set expiration to 1 year from now
+        endTime = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000);
+      } else {
+        // For quality C, use the selected duration
+        const durationMinutes = durationToMinutes(form.duration);
+        endTime = new Date(now.getTime() + durationMinutes * 60000);
+      }
 
       // Upload image if provided
       let imageUrl: string | null = null;
@@ -267,6 +275,14 @@ export function AddProductForm({ onSuccess }: AddProductFormProps) {
       }
 
       // Create product object
+      const totalPrice = form.quality === "C" 
+        ? parseInt(form.kiloPrice)
+        : parseInt(form.quantity) * parseInt(form.kiloPrice);
+      
+      const startingPrice = form.quality === "C"
+        ? parseInt(form.kiloPrice) / parseInt(form.quantity)
+        : parseInt(form.kiloPrice);
+
       const newProduct = {
         seller_id: user.id,
         category_id: form.category_id,
@@ -274,8 +290,8 @@ export function AddProductForm({ onSuccess }: AddProductFormProps) {
         description: form.description || "",
         quality: form.quality,
         quantity_available: parseInt(form.quantity),
-        price_full_sale: parseInt(form.quantity) * parseInt(form.kiloPrice),
-        starting_price: parseInt(form.kiloPrice),
+        price_full_sale: totalPrice,
+        starting_price: startingPrice,
         location_id: locationId,
         deliveryPrice: parseInt(form.deliveryPrice) || 0,
         status: "active",
@@ -434,16 +450,34 @@ export function AddProductForm({ onSuccess }: AddProductFormProps) {
 
         {/* Price + duration */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className={labelCls}>Prix au kilo / litre (DA)</label>
-            <input type="number" placeholder="185" value={form.kiloPrice} onChange={(e) => update("kiloPrice", e.target.value)} className={inputCls} disabled={loading} />
-          </div>
-          <div>
-            <label className={labelCls}>Durée de l'offre</label>
-            <select value={form.duration} onChange={(e) => update("duration", e.target.value)} className={inputCls} disabled={loading}>
-              {OFFERS_PERIOD.map((p) => <option key={p} value={p}>{p}</option>)}
-            </select>
-          </div>
+          {form.quality === "C" ? (
+            <div>
+              <label className={labelCls}>Prix total du lot (DA)</label>
+              <input type="number" placeholder="5000" value={form.kiloPrice} onChange={(e) => update("kiloPrice", e.target.value)} className={inputCls} disabled={loading} />
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">Prix complet sans calcul au kilo</p>
+            </div>
+          ) : (
+            <div>
+              <label className={labelCls}>Prix au kilo / litre (DA)</label>
+              <input type="number" placeholder="185" value={form.kiloPrice} onChange={(e) => update("kiloPrice", e.target.value)} className={inputCls} disabled={loading} />
+            </div>
+          )}
+          {form.quality === "C" ? (
+            <div>
+              <label className={labelCls}>Durée de l'offre</label>
+              <select value={form.duration} onChange={(e) => update("duration", e.target.value)} className={inputCls} disabled={loading}>
+                {OFFERS_PERIOD.map((p) => <option key={p} value={p}>{p}</option>)}
+              </select>
+            </div>
+          ) : (
+            <div>
+              <label className={labelCls}>Durée de l'offre</label>
+              <div className="h-10 px-3 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-emerald-50 dark:bg-emerald-950/30 text-sm text-emerald-700 dark:text-emerald-400 flex items-center font-medium">
+                Permanente
+              </div>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1.5">Les produits de qualité A/B restent affichés indéfiniment</p>
+            </div>
+          )}
         </div>
 
         {/* Delivery price */}
@@ -455,9 +489,12 @@ export function AddProductForm({ onSuccess }: AddProductFormProps) {
         {/* Computed total */}
         {form.quantity && form.kiloPrice && (
           <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl px-4 py-3 flex items-center justify-between">
-            <span className="text-sm text-emerald-700 dark:text-emerald-400">Prix total estimé du lot</span>
+            <span className="text-sm text-emerald-700 dark:text-emerald-400">Prix total du lot</span>
             <span className="text-base font-semibold text-emerald-700 dark:text-emerald-400">
-              {(Number(form.quantity) * Number(form.kiloPrice)).toLocaleString("fr-DZ")} DA
+              {form.quality === "C" 
+                ? Number(form.kiloPrice).toLocaleString("fr-DZ") 
+                : (Number(form.quantity) * Number(form.kiloPrice)).toLocaleString("fr-DZ")
+              } DA
             </span>
           </div>
         )}

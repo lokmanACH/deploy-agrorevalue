@@ -3,39 +3,39 @@
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Home, User, LogOut, Menu, X } from "lucide-react";
+import { Home, LogOut, Menu, X } from "lucide-react";
 
-const SellerSidebar = () => {
+const AssociationSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-
-  const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
 
   const navLinks = [
-    { href: "/seller", label: "Accueil", icon: Home },
-    { href: "/seller/profile", label: "Profil", icon: User },
+    { href: "/association", label: "Accueil", icon: Home },
   ];
 
   return (
     <>
-      {/* Mobile Top Bar */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 h-16 bg-white dark:bg-zinc-950 border-b border-zinc-200 dark:border-zinc-800 px-4 flex items-center justify-between">
+      {/* Hamburger — fixed to top-left, mobile only, always visible */}
+      {isOpen ? (
         <button
-          onClick={toggleSidebar}
-          className="text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
-          aria-label="Toggle Menu"
-        >
-          {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        onClick={() => setIsOpen(false)}
+        className="lg:hidden fixed top-3 left-4 z-50 flex items-center justify-center h-9 w-9 rounded-full text-white hover:bg-white/20 transition-colors"
+        aria-label="Ouvrir le menu"
+      >
+        <X className="w-4 h-4" />
+      </button>
+      ):
+        <button
+        onClick={() => setIsOpen(true)}
+        className="lg:hidden fixed top-3 left-4 z-50 flex items-center justify-center h-9 w-9 rounded-full text-white hover:bg-white/20 transition-colors"
+        aria-label="Ouvrir le menu"
+      >
+        <Menu className="w-4 h-4" />
+      </button>
+      }
 
-        <Link href="/seller/profile" className="flex items-center gap-3">
-          <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">John Doe</span>
-          <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white text-xs font-bold">JD</div>
-        </Link>
-      </div>
-
-      {/* Overlay for mobile */}
+      {/* Overlay */}
       <div
         className={`fixed inset-0 z-40 bg-zinc-900/80 backdrop-blur-sm lg:hidden transition-opacity duration-300 ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
@@ -51,7 +51,7 @@ const SellerSidebar = () => {
       >
         {/* Desktop header */}
         <div className="hidden lg:flex items-center h-16 px-6 border-b border-zinc-200 dark:border-zinc-800">
-          <Link href="/seller" className="flex items-center gap-2">
+          <Link href="/association" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold">
               T
             </div>
@@ -61,7 +61,7 @@ const SellerSidebar = () => {
           </Link>
         </div>
 
-        {/* Navigation Links */}
+        {/* Navigation */}
         <nav className="p-4 space-y-1">
           <div className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-4 px-3 mt-4">
             Menu principal
@@ -69,7 +69,6 @@ const SellerSidebar = () => {
           {navLinks.map((link) => {
             const Icon = link.icon;
             const isActive = pathname === link.href;
-
             return (
               <Link
                 key={link.href}
@@ -81,23 +80,16 @@ const SellerSidebar = () => {
                     : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-50"
                 }`}
               >
-                <Icon
-                  className={`w-5 h-5 ${
-                    isActive
-                      ? "text-emerald-600 dark:text-emerald-400"
-                      : "text-zinc-400 dark:text-zinc-500"
-                  }`}
-                />
+                <Icon className={`w-5 h-5 ${isActive ? "text-emerald-600 dark:text-emerald-400" : "text-zinc-400 dark:text-zinc-500"}`} />
                 {link.label}
               </Link>
             );
           })}
         </nav>
 
-        {/* Spacer */}
         <div className="flex-1" />
 
-        {/* Logout Button */}
+        {/* Logout */}
         <div className="p-4 border-t border-zinc-200 dark:border-zinc-800">
           <Link
             href="/"
@@ -113,4 +105,4 @@ const SellerSidebar = () => {
   );
 };
 
-export default SellerSidebar;
+export default AssociationSidebar;

@@ -153,18 +153,20 @@ export default function BuyerDashboardPage() {
     setActiveProduct(null);
   };
 
-  const filtered = products.filter((p) => {
-    const searchValue = search.trim().toLowerCase();
+  const filtered = products
+    .filter((p) => {
+      const searchValue = search.trim().toLowerCase();
 
-    const matchSearch =
-      p.name.toLowerCase().includes(searchValue) ||
-      p.location.toLowerCase().includes(searchValue);
+      const matchSearch =
+        p.name.toLowerCase().includes(searchValue) ||
+        p.location.toLowerCase().includes(searchValue);
 
-    const matchCategory =
-      activeCategory === "Tous" || p.category === activeCategory;
+      const matchCategory =
+        activeCategory === "Tous" || p.category === activeCategory;
 
-    return matchSearch && matchCategory;
-  });
+      return matchSearch && matchCategory;
+    })
+    .sort((a, b) => b.totalPrice - a.totalPrice);
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">

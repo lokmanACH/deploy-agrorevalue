@@ -10,6 +10,7 @@ interface Product {
   quantity: string | number;
   kiloPrice: number;
   totalPrice: number;
+  quality?: "A" | "B" | "C";
 }
 
 interface NegotiateModalProps {
@@ -18,10 +19,13 @@ interface NegotiateModalProps {
 }
 
 export function NegotiateModal({ product, onClose }: NegotiateModalProps) {
-  const [quantity, setQuantity] = useState("");
   const [offerKiloPrice, setOfferKiloPrice] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const fullQuantity = typeof product.quantity === "string" 
+    ? parseFloat(product.quantity) 
+    : product.quantity;
 
   const handleSubmit = async () => {
     setError(null);
@@ -32,13 +36,7 @@ export function NegotiateModal({ product, onClose }: NegotiateModalProps) {
       return;
     }
 
-    const qty = Number(quantity);
     const price = Number(offerKiloPrice);
-
-    if (!quantity || isNaN(qty) || qty <= 0) {
-      setError("Veuillez saisir une quantité valide.");
-      return;
-    }
 
     if (!offerKiloPrice || isNaN(price) || price <= 0) {
       setError("Veuillez saisir un prix valide.");
@@ -50,9 +48,9 @@ export function NegotiateModal({ product, onClose }: NegotiateModalProps) {
       const obj = {
         product_id: product.id,
         buyer_id: user.id,
-        quantity_requested: qty,
+        quantity_requested: fullQuantity,
         price_per_kg: price,
-        total_price: price * qty,
+        total_price: price * fullQuantity,
         status: "pending",
         created_at: new Date().toISOString(),
       };
@@ -100,7 +98,7 @@ export function NegotiateModal({ product, onClose }: NegotiateModalProps) {
             <span className="font-medium text-zinc-900 dark:text-zinc-50">{product.quantity}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-zinc-500 dark:text-zinc-400">Prix au Kilo</span>
+            <span className="text-zinc-500 dark:text-zinc-400">{product.quality === "C" ? "Prix total" : "Prix au Kilo"}</span>
             <span className="font-medium text-zinc-900 dark:text-zinc-50">
               {product.kiloPrice.toLocaleString("fr-DZ")} DA
             </span>
@@ -116,24 +114,7 @@ export function NegotiateModal({ product, onClose }: NegotiateModalProps) {
         <div className="mb-5 space-y-4">
           <div>
             <label className="block text-sm text-zinc-500 dark:text-zinc-400 mb-1.5">
-              Quantité souhaitée
-            </label>
-            <div className="relative">
-              <input
-                type="number"
-                placeholder="Ex : 1000"
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
-                disabled={loading}
-                className="w-full h-10 px-3 pr-12 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-sm text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-50"
-              />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-zinc-400">kg</span>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm text-zinc-500 dark:text-zinc-400 mb-1.5">
-              Prix au kilo proposé
+              Prix au kilo proposé <span className="text-red-600">*</span>
             </label>
             <div className="relative">
               <input
@@ -156,6 +137,29 @@ export function NegotiateModal({ product, onClose }: NegotiateModalProps) {
           </div>
         </div>
 
+        {offerKiloPrice && Number(offerKiloPrice) > 0 && (
+          <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl p-4 mb-5 space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-emerald-700 dark:text-emerald-400">Quantité</span>
+              <span className="font-medium text-emerald-700 dark:text-emerald-400">
+                {fullQuantity.toLocaleString("fr-DZ")} kg
+              </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-emerald-700 dark:text-emerald-400">Prix au kilo</span>
+              <span className="font-medium text-emerald-700 dark:text-emerald-400">
+                {Number(offerKiloPrice).toLocaleString("fr-DZ")} DA
+              </span>
+            </div>
+            <div className="border-t border-emerald-200 dark:border-emerald-800 pt-2 flex justify-between">
+              <span className="text-emerald-700 dark:text-emerald-400 font-medium">Total proposé</span>
+              <span className="font-bold text-emerald-600 dark:text-emerald-400 text-lg">
+                {(Number(offerKiloPrice) * fullQuantity).toLocaleString("fr-DZ")} DA
+              </span>
+            </div>
+          </div>
+        )}
+
         <div className="flex gap-2.5">
           <button
             onClick={onClose}
@@ -165,9 +169,9 @@ export function NegotiateModal({ product, onClose }: NegotiateModalProps) {
             Annuler
           </button>
           <button 
-            className="flex-1 h-10 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center disabled:opacity-50" 
+            className="flex-1 h-10 bg-emerald-600 hover:bg-emerald-700 disabled:bg-zinc-300 dark:disabled:bg-zinc-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center disabled:opacity-50" 
             onClick={handleSubmit}
-            disabled={loading}
+            disabled={loading || !offerKiloPrice || parseFloat(offerKiloPrice) <= 0}
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Envoyer l'offre"}
           </button>
@@ -175,4 +179,4 @@ export function NegotiateModal({ product, onClose }: NegotiateModalProps) {
       </div>
     </div>
   );
-}
+}

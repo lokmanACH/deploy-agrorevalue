@@ -38,7 +38,7 @@ const Hero = () => {
           <div className="flex-1 text-center lg:text-left">
 
             <h1 className="text-3xl lg:text-4xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3 leading-tight">
-              Agrorevalue : {" "}
+              Tatmeen : {" "}
               <span className="text-emerald-600 dark:text-emerald-400">
                 Enchères Agro-alimentaires
               </span>

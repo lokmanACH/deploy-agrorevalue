@@ -1255,7 +1255,13 @@ const reconnect = async () => {
 
               <button
                 onClick={() => setModal("negotiate")}
-                className="w-full h-10 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-sm font-semibold rounded-xl transition-colors"
+                disabled={product.quality === "C"}
+                className={`w-full h-10 text-sm font-semibold rounded-xl transition-colors ${
+                  product.quality === "C"
+                    ? "border border-zinc-200 dark:border-zinc-700 text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-800 cursor-not-allowed opacity-50"
+                    : "border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900"
+                }`}
+                title={product.quality === "C" ? "Négociation non disponible pour la qualité C" : ""}
               >
                 Proposer un prix
               </button>

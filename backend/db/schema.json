@@ -29,6 +29,20 @@
             "created_at": "2026-04-01"
         },
         {
+            "id": 2,
+            "company_name": "Green Valley",
+            "email": "seller2@email.com",
+            "password_hash": "1234",
+            "phone": "0770000002",
+            "role": "seller",
+            "is_verified": true,
+            "first_name": "mohamed",
+            "last_name": "benziout",
+            "avatar": "https://example.com/avatar2.jpg",
+            "is_active": true,
+            "created_at": "2026-04-01"
+        },
+        {
             "id": 24,
             "company_name": "Organic DZ",
             "email": "buyer11@email.com",
@@ -52,6 +66,20 @@
             "is_verified": true,
             "first_name": "Mohammed Ali",
             "last_name": "Said",
+            "avatar": "https://example.com/avatar11.jpg",
+            "is_active": true,
+            "created_at": "2026-04-01"
+        },
+        {
+            "id": 26,
+            "company_name": "Association Agri DZ",
+            "email": "association@email.com",
+            "password_hash": "1234",
+            "phone": "0660000098",
+            "role": "association",
+            "is_verified": true,
+            "first_name": "Djamel Eddine",
+            "last_name": "Zitouni",
             "avatar": "https://example.com/avatar11.jpg",
             "is_active": true,
             "created_at": "2026-04-01"
@@ -329,23 +357,113 @@
             "name": "Vegetables"
         }
     ],
-    "products": [],
-    "product_images": [
+    "products": [
         {
-            "product_id": 1,
-            "image_url": "http://localhost:5000/uploads/1776701058273-ga40lmfxc.jpg",
-            "id": 1,
-            "created_at": "2026-04-20T16:04:18.328Z"
+            "seller_id": 1,
+            "category_id": 1,
+            "title": "tomato",
+            "description": "no desc",
+            "quality": "A",
+            "quantity_available": 1201,
+            "price_full_sale": 50442,
+            "starting_price": 42,
+            "location_id": 20,
+            "deliveryPrice": 5000,
+            "status": "active",
+            "start_time": "2026-05-27T07:33:09.963Z",
+            "end_time": "2027-05-27T07:33:09.963Z",
+            "id": 2,
+            "created_at": "2026-05-27T07:33:10.039Z"
         },
         {
-            "product_id": 1,
-            "image_url": "http://localhost:5000/uploads/1776701223072-hi41qr2ce.jpg",
-            "id": 2,
-            "created_at": "2026-04-20T16:07:03.124Z"
+            "seller_id": 1,
+            "category_id": 1,
+            "title": "basla",
+            "description": "",
+            "quality": "C",
+            "quantity_available": 1000,
+            "price_full_sale": 5089889,
+            "starting_price": 5089.889,
+            "location_id": 22,
+            "deliveryPrice": 2299,
+            "status": "active",
+            "start_time": "2026-05-28T09:01:14.086Z",
+            "end_time": "2026-05-31T15:01:14.086Z",
+            "id": 3,
+            "created_at": "2026-05-28T09:01:14.123Z"
+        },
+        {
+            "seller_id": 1,
+            "category_id": 1,
+            "title": "7omos",
+            "description": "",
+            "quality": "A",
+            "quantity_available": 2000,
+            "price_full_sale": 466000,
+            "starting_price": 233,
+            "location_id": 15,
+            "deliveryPrice": 3497,
+            "status": "active",
+            "start_time": "2026-05-28T09:41:02.125Z",
+            "end_time": "2027-05-28T09:41:02.125Z",
+            "id": 4,
+            "created_at": "2026-05-28T09:41:02.165Z"
         }
     ],
-    "bids": [],
-    "allocations": [],
+    "product_images": [
+        {
+            "product_id": 2,
+            "image_url": "/uploads/1779867189998-5wvwroh9w.jpg",
+            "id": 4,
+            "created_at": "2026-05-27T07:33:10.105Z"
+        },
+        {
+            "product_id": 3,
+            "image_url": "/uploads/1779958874100-o6y86btr7.jpg",
+            "id": 5,
+            "created_at": "2026-05-28T09:01:14.168Z"
+        },
+        {
+            "product_id": 4,
+            "image_url": "/uploads/1779961262145-zyq5fimv0.jpg",
+            "id": 6,
+            "created_at": "2026-05-28T09:41:02.199Z"
+        }
+    ],
+    "bids": [
+        {
+            "product_id": 3,
+            "buyer_id": 25,
+            "quantity_requested": 300,
+            "price_per_kg": 5089.889,
+            "total_price": 1526966.7,
+            "status": "pending",
+            "created_at": "2026-05-28T09:39:29.573Z",
+            "id": 1
+        },
+        {
+            "product_id": 4,
+            "buyer_id": 24,
+            "quantity_requested": 2000,
+            "price_per_kg": 23000000,
+            "total_price": 46000000000,
+            "status": "pending",
+            "created_at": "2026-05-28T09:46:26.376Z",
+            "id": 2
+        }
+    ],
+    "allocations": [
+        {
+            "product_id": 3,
+            "buyer_id": 25,
+            "bid_id": 1,
+            "allocated_quantity": 300,
+            "final_price": 1529265.7,
+            "order": 1,
+            "created_at": "2026-05-28T09:39:29.749Z",
+            "id": 1
+        }
+    ],
     "buyer_preferences": [
         {
             "id": 1,
@@ -361,6 +479,32 @@
             "message": "New product available: Potatoes",
             "is_read": false,
             "created_at": "2026-04-01"
+        },
+        {
+            "id": 2,
+            "user_id": 1,
+            "type": "new_bid",
+            "message": "New bid on \"basla\" from Appel DZ: 300kg @ 5089.889 DZ/kg",
+            "is_read": false,
+            "created_at": "2026-05-28T09:39:29.701Z",
+            "product_id": 3,
+            "buyer_id": 25,
+            "quantity": 300,
+            "price_per_kg": 5089.889,
+            "total_price": 1526966.7
+        },
+        {
+            "id": 3,
+            "user_id": 1,
+            "type": "new_bid",
+            "message": "New bid on \"7omos\" from Organic DZ: 2000kg @ 23000000 DZ/kg",
+            "is_read": false,
+            "created_at": "2026-05-28T09:46:26.421Z",
+            "product_id": 4,
+            "buyer_id": 24,
+            "quantity": 2000,
+            "price_per_kg": 23000000,
+            "total_price": 46000000000
         }
     ],
     "locations": [
@@ -496,6 +640,38 @@
             "address": "Ouled Rahmoune, Constantine",
             "id": 18,
             "created_at": "2026-04-20T16:07:03.044Z"
+        },
+        {
+            "user_id": 1,
+            "id_wilaya": 13,
+            "id_commune": 393,
+            "address": "Beni Mester, Tlemcen",
+            "id": 19,
+            "created_at": "2026-05-27T07:30:20.555Z"
+        },
+        {
+            "user_id": 1,
+            "id_wilaya": 15,
+            "id_commune": 539,
+            "address": "Aghrib, Tizi Ouzou",
+            "id": 20,
+            "created_at": "2026-05-27T07:33:09.935Z"
+        },
+        {
+            "user_id": 1,
+            "id_wilaya": 9,
+            "id_commune": 297,
+            "address": "Meftah, Blida",
+            "id": 21,
+            "created_at": "2026-05-27T07:44:27.386Z"
+        },
+        {
+            "user_id": 1,
+            "id_wilaya": 18,
+            "id_commune": 663,
+            "address": "Djmila, Jijel",
+            "id": 22,
+            "created_at": "2026-05-28T09:01:14.065Z"
         }
     ],
     "revenue": [

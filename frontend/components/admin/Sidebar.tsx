@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icons } from "./Icons";
-import { useState } from "react";
+import { LogOut } from "lucide-react";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -17,6 +17,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
     { name: "Tableau de Bord", href: "/admin", icon: Icons.dashboard },
     { name: "Acheteurs", href: "/admin/buyers", icon: Icons.users },
     { name: "Vendeurs", href: "/admin/sellers", icon: Icons.wallet },
+    { name: "Associations", href: "/admin/associations", icon: Icons.building2 },
     { name: "Paramètres", href: "/admin/settings", icon: Icons.settings },
   ];
 
@@ -35,10 +36,10 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         <div className="flex items-center justify-between h-16 px-6 border-b border-zinc-200 dark:border-zinc-800">
           <Link href="/admin" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold">
-              AR
+              T
             </div>
             <span className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-              AgroRevalue
+              Tatmeen
             </span>
           </Link>
           <button
@@ -79,18 +80,29 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         </nav>
 
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-zinc-200 dark:border-zinc-800">
-          <div className="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl p-4 text-white shadow-md">
+          <div className="bg-linear-to-r from-emerald-600 to-teal-600 rounded-xl p-4 text-white shadow-md">
             <h4 className="font-semibold text-sm mb-1">Besoin d&apos;aide ?</h4>
             <p className="text-xs text-emerald-100 mb-3 opacity-90">
               Veuillez contacter le support.
             </p>
             <Link 
               href="/admin/help"
-              className="block flex justify-center w-full bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white text-xs py-2 rounded-lg font-medium transition-colors"
+              className="flex justify-center w-full bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white text-xs py-2 rounded-lg font-medium transition-colors"
             >
               Documentation
             </Link>
           </div>
+        </div>
+
+                {/* Logout */}
+        <div className="p-4 border-t border-zinc-200 dark:border-zinc-800">
+          <Link
+            href="/"
+            className="flex items-center justify-center gap-2 px-4 py-3 bg-linear-to-r from-red-400 to-red-500/90 text-white font-semibold rounded-lg hover:from-red-500/90 hover:to-red-500 transition shadow-md hover:shadow-lg"
+          >
+            <LogOut className="w-5 h-5" />
+            <span>Se déconnecter</span>
+          </Link>
         </div>
       </aside>
     </>

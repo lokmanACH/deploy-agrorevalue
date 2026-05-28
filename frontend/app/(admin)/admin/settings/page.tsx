@@ -67,8 +67,8 @@ function Section({
 export default function SettingsPage() {
   // Admin profile
   const [firstName, setFirstName] = useState("Admin");
-  const [lastName, setLastName] = useState("AgroRevalue");
-  const [email, setEmail] = useState("admin@agrorevalue.com");
+  const [lastName, setLastName] = useState("Tatmeen");
+  const [email, setEmail] = useState("admin@tatmeen.com");
   const [phone, setPhone] = useState("+213 555 123 456");
   const [password, setPassword] = useState("");
 
@@ -156,7 +156,7 @@ export default function SettingsPage() {
         footer={
           <>
             <button
-              onClick={() => { setFirstName("Admin"); setLastName("AgroRevalue"); setEmail("admin@agrorevalue.com"); setPhone("+213 555 123 456"); setPassword(""); }}
+              onClick={() => { setFirstName("Admin"); setLastName("Tatmeen"); setEmail("admin@tatmeen.com"); setPhone("+213 555 123 456"); setPassword(""); }}
               className="px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-950"
             >
               Réinitialiser

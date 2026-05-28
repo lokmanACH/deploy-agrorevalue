@@ -93,7 +93,7 @@ export default function SellersPage() {
 
   // ── Derived seller rows ───────────────────────────────────────────────────
   const baseSellers = users
-    .filter((u) => u.role === "seller")
+    .filter((u) => u.role === "association")
     .map((user) => {
       const totalRevenue = revenue
         .filter((r) => r.user_id === user.id)
@@ -153,7 +153,7 @@ export default function SellersPage() {
 
   const statsCards = [
     {
-      name: "Total Vendeurs",
+      name: "Total associations",
       value: loading ? "—" : totalSellers.toString(),
       icon: Icons.wallet,
       color: "text-emerald-600 dark:text-emerald-400",
@@ -166,13 +166,6 @@ export default function SellersPage() {
       color: "text-amber-600 dark:text-amber-400",
       bg: "bg-amber-50 dark:bg-amber-900/30",
     },
-    {
-      name: "Volume moyen / mois",
-      value: loading ? "—" : `${avgMonthlyVolume.toLocaleString("fr-DZ", { maximumFractionDigits: 0 })} DZD`,
-      icon: Icons.trendingUp,
-      color: "text-purple-600 dark:text-purple-400",
-      bg: "bg-purple-50 dark:bg-purple-900/30",
-    },
   ];
 
   // ── Handlers ──────────────────────────────────────────────────────────────
@@ -183,14 +176,14 @@ export default function SellersPage() {
 
   const handleExportCSV = () => {
     const rows = [
-      ["ID Vendeur", "Nom complet", "Entreprise", "Email", "Téléphone", "Date inscription", "Revenus (DZD)", "Statut"].join(","),
+      ["ID association", "Nom complet", "Entreprise", "Email", "Téléphone", "Date inscription", "Revenus (DZD)", "Statut"].join(","),
       ...filteredSellers.map((s) =>
         [s.id, `"${s.name}"`, `"${s.company}"`, s.email, s.phone, s.date, s.revenueNumber, s.status].join(",")
       ),
     ];
     const link = document.createElement("a");
     link.href = "data:text/csv;charset=utf-8," + encodeURIComponent(rows.join("\n"));
-    link.download = "vendeurs.csv";
+    link.download = "associations.csv";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -272,10 +265,10 @@ export default function SellersPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
-            Gestion des Vendeurs
+            Gestion des associations
           </h1>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
-            Consultez et gérez l&apos;ensemble des vendeurs et agriculteurs inscrits sur la plateforme.
+            Consultez et gérez l'ensemble des associations.
           </p>
         </div>
         <button
@@ -288,7 +281,7 @@ export default function SellersPage() {
       </div>
 
       {/* ── Stats Cards ───────────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {statsCards.map((stat, i) => (
           <div
             key={i}
@@ -317,7 +310,7 @@ export default function SellersPage() {
             <Icons.search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
             <input
               type="text"
-              placeholder="Rechercher un vendeur..."
+              placeholder="Rechercher une association..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="h-10 w-full rounded-lg border border-zinc-200 bg-white pl-10 pr-4 text-sm outline-none transition-all focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-zinc-800 dark:bg-zinc-900 dark:focus:border-emerald-500"
@@ -345,7 +338,7 @@ export default function SellersPage() {
           <table className="w-full text-left text-sm whitespace-nowrap">
             <thead className="bg-zinc-50 dark:bg-zinc-900/50 border-b border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400">
               <tr>
-                <th className="px-6 py-4 font-medium">ID Vendeur</th>
+                <th className="px-6 py-4 font-medium">ID association</th>
                 <th className="px-6 py-4 font-medium">Nom / Entreprise</th>
                 <th className="px-6 py-4 font-medium">Contact</th>
                 <th className="px-6 py-4 font-medium">Date d&apos;inscription</th>
@@ -419,7 +412,7 @@ export default function SellersPage() {
                   <td colSpan={8} className="px-6 py-16 text-center">
                     <div className="flex flex-col items-center gap-3 text-zinc-400">
                       <Icons.wallet className="w-10 h-10 opacity-30" />
-                      <p className="font-medium">Aucun vendeur trouvé</p>
+                      <p className="font-medium">Aucune association trouvée</p>
                       <p className="text-sm">Essayez de modifier vos filtres de recherche.</p>
                     </div>
                   </td>
@@ -432,7 +425,7 @@ export default function SellersPage() {
         {/* Footer */}
         <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-sm text-zinc-500 dark:text-zinc-400 bg-zinc-50/50 dark:bg-zinc-900/20">
           <div>
-            {loading ? "Chargement…" : `${filteredSellers.length} résultat${filteredSellers.length !== 1 ? "s" : ""} sur ${baseSellers.length} vendeur${baseSellers.length !== 1 ? "s" : ""}`}
+            {loading ? "Chargement…" : `${filteredSellers.length} résultat${filteredSellers.length !== 1 ? "s" : ""} sur ${baseSellers.length} association${baseSellers.length !== 1 ? "s" : ""}`}
           </div>
           <div className="flex gap-2">
             <button className="px-3 py-1 rounded border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 opacity-40 cursor-not-allowed text-xs">Précédent</button>
@@ -489,7 +482,7 @@ export default function SellersPage() {
             </button>
             <h2 className="text-xl font-semibold text-zinc-900 dark:text-white mb-1">Modifier le statut</h2>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-6">
-              Vendeur : <span className="font-medium text-zinc-900 dark:text-zinc-100">{editingSeller.name}</span>
+              association : <span className="font-medium text-zinc-900 dark:text-zinc-100">{editingSeller.name}</span>
             </p>
             <div className="mb-6">
               <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">Nouveau statut</label>

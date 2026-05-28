@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Agrorevalue",
-  description: "Agrorevalue is a platform for sustainable agriculture.",
+  title: "Tatmeen – Une seconde chance pour chaque surplus, une nouvelle valeur pour l'économie",
+  description: "Tatmeen est un marché secondaire numérique dédié à la valorisation des surplus agroalimentaires. La plateforme permet aux agriculteurs, grossistes et producteurs de commercialiser leurs excédents auprès d'acheteurs professionnels grâce à un système combinant vente directe en gros et enchères électroniques.",
 };
 
 export default function RootLayout({

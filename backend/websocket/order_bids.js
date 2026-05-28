@@ -148,42 +148,34 @@ function getOrderedBids(productId, users, bids) {
 
 
 function createAllocations(product, users, bids, getOrderedBids) {
-    let remainingQty = product.quantity_available;
-
     // 1️⃣ get ordered bids (WINNERS ORDER)
     const orderedBids = getOrderedBids(product.id, users, bids);
 
     const allocations = [];
 
-    // 2️⃣ allocate
-    for (let i = 0; i < orderedBids.length; i++) {
-        if (remainingQty <= 0) break;
-
-        const bid = orderedBids[i];
-
-        const allocatedQty = Math.min(bid.quantity_requested, remainingQty);
+    // 2️⃣ ONLY ALLOCATE TO THE HIGHEST BIDDER (first in order)
+    if (orderedBids.length > 0) {
+        const winnerBid = orderedBids[0];
 
         allocations.push({
-            id: i + 1,
+            id: 1,
             product_id: product.id,
-            buyer_id: bid.buyer_id,
-            bid_id: bid.id,
-            allocated_quantity: allocatedQty,
-            final_price: allocatedQty * bid.price_per_kg + product.deliveryPrice,
-            order: i + 1,
+            buyer_id: winnerBid.buyer_id,
+            bid_id: winnerBid.id,
+            allocated_quantity: product.quantity_available,  // Entire quantity to winner
+            final_price: product.quantity_available * winnerBid.price_per_kg + product.deliveryPrice,
+            order: 1,
 
             user: {
-                first_name: bid.user.first_name,
-                last_name: bid.user.last_name,
-                email: bid.user.email,
-                phone: bid.user.phone || null,
-                avatar: bid.user.avatar
+                first_name: winnerBid.user.first_name,
+                last_name: winnerBid.user.last_name,
+                email: winnerBid.user.email,
+                phone: winnerBid.user.phone || null,
+                avatar: winnerBid.user.avatar
             },
 
             created_at: new Date().toISOString()
         });
-
-        remainingQty -= allocatedQty;
     }
 
     return allocations;

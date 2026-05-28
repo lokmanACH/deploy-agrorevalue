@@ -53,10 +53,10 @@ const BuyerSidebar = () => {
         <div className="hidden lg:flex items-center h-16 px-6 border-b border-zinc-200 dark:border-zinc-800">
           <Link href="/buyer" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold">
-              AR
+              T
             </div>
             <span className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-              AgroRevalue
+              Tatmeen
             </span>
           </Link>
         </div>

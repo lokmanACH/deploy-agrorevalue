@@ -71,6 +71,7 @@ function EditModal({ offer, onClose, onSaved }: EditModalProps) {
     deliveryPrice: String(offer.deliveryPrice),
     quantity:      offer.quantity,
     status:        offer.status,
+    quality:       offer.quality,
   });
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState<string | null>(null);
@@ -86,12 +87,25 @@ function EditModal({ offer, onClose, onSaved }: EditModalProps) {
       const qty = parseInt(form.quantity);
       const kp  = parseInt(form.kiloPrice);
 
+      let totalPrice: number;
+      let startingPrice: number;
+
+      if (form.quality === "C") {
+        // For quality C, kiloPrice is the total price directly
+        totalPrice = kp;
+        startingPrice = kp / qty;
+      } else {
+        // For quality A/B, kiloPrice is per unit
+        totalPrice = qty * kp;
+        startingPrice = kp;
+      }
+
       const payload: Record<string, unknown> = {
         title:              form.name,
-        starting_price:     kp,
-        price_full_sale:    isNaN(qty) || isNaN(kp) ? parseInt(form.totalPrice) : qty * kp,
+        starting_price:     startingPrice,
+        price_full_sale:    totalPrice,
         deliveryPrice:      parseInt(form.deliveryPrice) || 0,
-        quantity_available: isNaN(qty) ? parseInt(form.quantity) : qty,
+        quantity_available: qty,
         status:             form.status,
       };
 
@@ -100,8 +114,8 @@ function EditModal({ offer, onClose, onSaved }: EditModalProps) {
       onSaved({
         id:           offer.id,
         name:         form.name,
-        kiloPrice:    kp,
-        totalPrice:   (payload.price_full_sale as number),
+        kiloPrice:    startingPrice,
+        totalPrice:   totalPrice,
         deliveryPrice: parseInt(form.deliveryPrice) || 0,
         quantity:     form.quantity,
         status:       form.status as Offer["status"],
@@ -152,7 +166,7 @@ function EditModal({ offer, onClose, onSaved }: EditModalProps) {
             />
           </div>
 
-          {/* Quantity + kilo price */}
+          {/* Quantity + kilo price / total price */}
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className={labelCls}>Quantité (kg)</label>
@@ -165,14 +179,20 @@ function EditModal({ offer, onClose, onSaved }: EditModalProps) {
               />
             </div>
             <div>
-              <label className={labelCls}>Prix au kilo (DA)</label>
+              <label className={labelCls}>
+                {form.quality === "C" ? "Prix total du lot (DA)" : "Prix au kilo (DA)"}
+              </label>
               <input
                 type="number"
                 value={form.kiloPrice}
                 onChange={(e) => update("kiloPrice", e.target.value)}
                 className={inputCls}
                 disabled={loading}
+                placeholder={form.quality === "C" ? "5000" : "185"}
               />
+              {form.quality === "C" && (
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">Prix complet sans calcul au kilo</p>
+              )}
             </div>
           </div>
 
@@ -206,9 +226,12 @@ function EditModal({ offer, onClose, onSaved }: EditModalProps) {
           {/* Computed total preview */}
           {form.quantity && form.kiloPrice && (
             <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl px-4 py-3 flex items-center justify-between">
-              <span className="text-sm text-emerald-700 dark:text-emerald-400">Prix total estimé</span>
+              <span className="text-sm text-emerald-700 dark:text-emerald-400">Prix total</span>
               <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">
-                {(Number(form.quantity) * Number(form.kiloPrice)).toLocaleString("fr-DZ")} DA
+                {form.quality === "C" 
+                  ? Number(form.kiloPrice).toLocaleString("fr-DZ")
+                  : (Number(form.quantity) * Number(form.kiloPrice)).toLocaleString("fr-DZ")
+                } DA
               </span>
             </div>
           )}
@@ -406,7 +429,10 @@ function OfferRow({ offer, onDelete, onUpdate }: OfferRowProps) {
               </span>
               {offer.status === "active" && (
                 <span className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
-                  <Clock className="w-3 h-3" />{offer.timeLeft}
+                  <Clock className="w-3 h-3" />
+                  {offer.quality === "A" || offer.quality === "B" 
+                    ? "Permanent" 
+                    : offer.timeLeft}
                 </span>
               )}
               {offer.offers > 0 && (
@@ -422,7 +448,7 @@ function OfferRow({ offer, onDelete, onUpdate }: OfferRowProps) {
                   {offer.totalPrice.toLocaleString("fr-DZ")}
                 </span>
                 <span className="text-xs text-zinc-500">DA</span>
-                <span className="text-xs text-zinc-400 ml-1">· {offer.kiloPrice} DA/kg</span>
+                <span className="text-xs text-zinc-400 ml-1">· {offer.kiloPrice} DA{offer.quality === "C" ? " (total)" : "/kg"}</span>
               </div>
 
               <div className="flex items-center gap-2">

@@ -33,10 +33,10 @@ export function PublicNavbar() {
         {/* Left — Logo */}
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-sm">
-            AR
+            T
           </div>
           <span className="text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 hidden sm:block">
-            AgroRevalue
+            Tatmeen
           </span>
         </Link>
 

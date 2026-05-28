@@ -182,7 +182,7 @@ export default function AdminDashboardPage() {
             Tableau de Bord
           </h1>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Bienvenue sur l'administration AgroRevalue. Voici ce qui se passe aujourd'hui.
+            Bienvenue sur l'administration Tatmeen. Voici ce qui se passe aujourd'hui.
           </p>
         </div>
         <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-900">

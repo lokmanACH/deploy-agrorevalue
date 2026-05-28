@@ -95,7 +95,7 @@ export function ProductCard({
           </div>
           <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
             <Coins className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
-            <span>Prix au kilo : <span className="font-medium text-zinc-800 dark:text-zinc-200">{formattedKiloPrice} DA</span></span>
+            <span>{quality === "C" ? "Prix total : " : "Prix au kilo : "}<span className="font-medium text-zinc-800 dark:text-zinc-200">{formattedKiloPrice} DA</span></span>
           </div>
           <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
             <MapPin className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
@@ -131,7 +131,13 @@ export function ProductCard({
           </button>
           <button
             onClick={onNegotiate}
-            className="h-9 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-xs font-semibold rounded-lg transition-colors"
+            disabled={quality === "C"}
+            className={`h-9 text-xs font-semibold rounded-lg transition-colors ${
+              quality === "C"
+                ? "border border-zinc-200 dark:border-zinc-700 text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-800 cursor-not-allowed opacity-50"
+                : "border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900"
+            }`}
+            title={quality === "C" ? "Négociation non disponible pour la qualité C" : ""}
           >
             Proposer un prix
           </button>

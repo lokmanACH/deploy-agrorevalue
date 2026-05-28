@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Administration - AgroRevalue",
+  title: "Administration - Tatmeen",
   description: "Tableau de bord de l'administration",
 };
 
