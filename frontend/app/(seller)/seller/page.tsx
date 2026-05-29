@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Plus,
   Package,
+  Heart,
   X,
   BadgeCheck,
   Loader2,
@@ -11,6 +12,7 @@ import {
 } from "lucide-react";
 import { AddProductForm } from "@/components/forms/AddProductForm";
 import { OffersTab } from "@/components/seller/Offerstab";
+import { DonationTab } from "@/components/seller/DonationTab";
 import { api, getUser, formatImageUrl } from "@/utils/apiClient";
 
 
@@ -158,7 +160,7 @@ interface Allocation {
   order: number;
 }
 
-type Tab = "add" | "offers";
+type Tab = "add" | "offers" | "donations";
 
 // ─── Helper functions ──────────────────────────────────────────────────────────
 
@@ -554,6 +556,19 @@ export default function SellerDashboardPage() {
                 {offers.filter((offer) => offer.status === "active").length}
               </span>
             </button>
+
+            <button
+              type="button"
+              onClick={() => setTab("donations")}
+              className={`flex items-center gap-2 h-8 px-4 rounded-md text-sm font-medium transition-all ${
+                tab === "donations"
+                  ? "bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 shadow-sm"
+                  : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300"
+              }`}
+            >
+              <Heart className="w-4 h-4" />
+              Donations
+            </button>
           </div>
         </div>
       </div>
@@ -591,6 +606,8 @@ export default function SellerDashboardPage() {
                 onAddNew={() => setTab("add")}
               />
             )}
+
+            {tab === "donations" && <DonationTab />}
           </>
         )}
       </div>
