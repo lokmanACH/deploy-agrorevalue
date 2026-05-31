@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icons } from "./Icons";
 import { LogOut } from "lucide-react";
+import Image from "next/image";
+import logo from "@/public/logo.png";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -35,9 +37,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
       >
         <div className="flex items-center justify-between h-16 px-6 border-b border-zinc-200 dark:border-zinc-800">
           <Link href="/admin" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold">
-              T
-            </div>
+            <Image src={logo} alt="Logo" className="w-auto h-12" />
             <span className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
               Tatmeen
             </span>

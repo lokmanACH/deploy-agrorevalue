@@ -40,14 +40,15 @@ const Hero = () => {
             <h1 className="text-3xl lg:text-4xl font-semibold text-zinc-900 dark:text-zinc-50 mb-3 leading-tight">
               Tatmeen : {" "}
               <span className="text-emerald-600 dark:text-emerald-400">
-                Enchères Agro-alimentaires
+                Une seconde chance pour chaque surplus, une nouvelle valeur pour l’économie
               </span>
             </h1>
 
-            <p className="text-zinc-500 dark:text-zinc-400 text-sm lg:text-xl max-w-md mx-auto lg:mx-0 mb-8 leading-relaxed">
-              Une plateforme numérique qui connecte producteurs, restaurants et
-              hôtels pour réduire le surplus alimentaire. Proposez ou achetez
-              des lots à prix compétitifs.
+            <p className="text-zinc-500 dark:text-zinc-400 text-sm lg:text-lg max-w-md mx-auto lg:mx-0 mb-8 leading-relaxed">
+              Tatmeen est un marché secondaire numérique dédié à la valorisation des surplus 
+              agroalimentaires. La plateforme permet aux agriculteurs, grossistes et producteurs de 
+              commercialiser leurs excédents auprès d’acheteurs professionnels grâce à un système 
+              combinant vente directe en gros et enchères électroniques.
             </p>
           </div>
 

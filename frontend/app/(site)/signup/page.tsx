@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ShoppingCart, Store, Building2} from "lucide-react";
+import Image from "next/image";
+import logo from "@/public/logo.png"
 
 type AccountType = "buyer" | "seller" | "association" | null;
 
@@ -50,14 +52,7 @@ export default function RegisterPage() {
 
         {/* Header */}
         <div className="px-7 pt-7 pb-5 border-b border-zinc-200 dark:border-zinc-800">
-          <Link href="/" className="flex items-center gap-2 mb-5">
-            <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-sm">
-              T
-            </div>
-            <span className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
-              Tatmeen
-            </span>
-          </Link>
+          <Image src={logo} alt="Tatmeen Logo" className="w-auto h-12" />
           <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
             Créer un compte
           </h1>

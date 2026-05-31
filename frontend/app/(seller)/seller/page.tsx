@@ -12,8 +12,8 @@ import {
 } from "lucide-react";
 import { AddProductForm } from "@/components/forms/AddProductForm";
 import { OffersTab } from "@/components/seller/Offerstab";
-import { DonationTab } from "@/components/seller/DonationTab";
 import { api, getUser, formatImageUrl } from "@/utils/apiClient";
+import { DonateForm } from "@/components/forms/DonateForm";
 
 
 
@@ -567,7 +567,7 @@ export default function SellerDashboardPage() {
               }`}
             >
               <Heart className="w-4 h-4" />
-              Donations
+              Faire un don
             </button>
           </div>
         </div>
@@ -607,7 +607,7 @@ export default function SellerDashboardPage() {
               />
             )}
 
-            {tab === "donations" && <DonationTab />}
+            {tab === "donations" && <DonateForm />}
           </>
         )}
       </div>

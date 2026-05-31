@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Home, User, LogOut, Menu, X } from "lucide-react";
+import Image from "next/image";
+import logo from "@/public/logo.png";
 
 const SellerSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -52,9 +54,7 @@ const SellerSidebar = () => {
         {/* Desktop header */}
         <div className="hidden lg:flex items-center h-16 px-6 border-b border-zinc-200 dark:border-zinc-800">
           <Link href="/seller" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold">
-              T
-            </div>
+            <Image src={logo} alt="Logo" className="w-auto h-12" />
             <span className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
               Tatmeen
             </span>

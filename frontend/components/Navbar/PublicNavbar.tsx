@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-import { Search, Globe, Menu, X } from "lucide-react";
+import {Globe, Menu, X } from "lucide-react";
+import Image from "next/image";
+import logo from "@/public/logo.png"
 
 export function PublicNavbar() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,13 +33,8 @@ export function PublicNavbar() {
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
 
         {/* Left — Logo */}
-        <Link href="/" className="flex items-center gap-2 shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold text-sm">
-            T
-          </div>
-          <span className="text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 hidden sm:block">
-            Tatmeen
-          </span>
+        <Link href="/">
+          <Image src={logo} alt="Tatmeen Logo" className="w-auto h-12" />
         </Link>
 
 
