@@ -450,6 +450,36 @@
             "status": "pending",
             "created_at": "2026-05-28T09:46:26.376Z",
             "id": 2
+        },
+        {
+            "product_id": 4,
+            "buyer_id": 24,
+            "quantity_requested": 2000,
+            "price_per_kg": 3333,
+            "total_price": 6666000,
+            "status": "pending",
+            "created_at": "2026-06-05T14:24:45.329Z",
+            "id": 3
+        },
+        {
+            "product_id": 2,
+            "buyer_id": 24,
+            "quantity_requested": 1201,
+            "price_per_kg": 99999,
+            "total_price": 120098799,
+            "status": "pending",
+            "created_at": "2026-06-05T14:30:43.897Z",
+            "id": 4
+        },
+        {
+            "product_id": 4,
+            "buyer_id": 24,
+            "quantity_requested": 2000,
+            "price_per_kg": 99999999999999,
+            "total_price": 199999999999998000,
+            "status": "pending",
+            "created_at": "2026-06-05T14:30:54.317Z",
+            "id": 5
         }
     ],
     "allocations": [
@@ -515,6 +545,45 @@
             "quantity": 2000,
             "price_per_kg": 23000000,
             "total_price": 46000000000
+        },
+        {
+            "id": 4,
+            "user_id": 1,
+            "type": "new_bid",
+            "message": "New bid on \"7omos\" from Organic DZ: 2000kg @ 3333 DZ/kg",
+            "is_read": false,
+            "created_at": "2026-06-05T14:24:45.494Z",
+            "product_id": 4,
+            "buyer_id": 24,
+            "quantity": 2000,
+            "price_per_kg": 3333,
+            "total_price": 6666000
+        },
+        {
+            "id": 5,
+            "user_id": 1,
+            "type": "new_bid",
+            "message": "New bid on \"tomato\" from Organic DZ: 1201kg @ 99999 DZ/kg",
+            "is_read": false,
+            "created_at": "2026-06-05T14:30:43.996Z",
+            "product_id": 2,
+            "buyer_id": 24,
+            "quantity": 1201,
+            "price_per_kg": 99999,
+            "total_price": 120098799
+        },
+        {
+            "id": 6,
+            "user_id": 1,
+            "type": "new_bid",
+            "message": "New bid on \"7omos\" from Organic DZ: 2000kg @ 99999999999999 DZ/kg",
+            "is_read": false,
+            "created_at": "2026-06-05T14:30:54.409Z",
+            "product_id": 4,
+            "buyer_id": 24,
+            "quantity": 2000,
+            "price_per_kg": 99999999999999,
+            "total_price": 199999999999998000
         }
     ],
     "locations": [

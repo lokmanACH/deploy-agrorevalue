@@ -403,89 +403,99 @@ export default function SellerDashboardPage() {
 
     const fetchAll = async () => {
       try {
-        const responses: BidsResponse[] = await Promise.all(
-          activeProductIds.map(async (productId) => {
-            const res = await fetch(
-              `http://localhost:5000/api/bids/${productId}`
-            );
-
-            if (!res.ok) {
-              throw new Error(
-                `HTTP error ${res.status} for product ${productId}`
-              );
-            }
-
-            return (await res.json()) as BidsResponse;
-          })
-        );
-
         if (!isActive) return;
 
-        setOffers((prev) =>
-          prev.map((offer) => {
-            const match = responses.find((r) => r.product_id === offer.id);
+        // Use AbortController for timeout handling (30s max per request)
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-            if (!match) return offer;
-
-            const bestByBuyer = new Map<number, BidApiItem>();
-
-            (match.bids || []).forEach((bid) => {
-              const existing = bestByBuyer.get(bid.buyer_id);
-
-              if (!existing || bid.price_per_kg > existing.price_per_kg) {
-                bestByBuyer.set(bid.buyer_id, bid);
+        try {
+          const responses: BidsResponse[] = await Promise.all(
+            activeProductIds.map(async (productId) => {
+              try {
+                return await api.get<BidsResponse>(`bids/${productId}`);
+              } catch (error) {
+                console.warn(`Failed to fetch bids for product ${productId}:`, error);
+                // Return empty response to prevent entire poll from failing
+                return { product_id: productId, bids: [], allocations: [] };
               }
-            });
+            })
+          );
 
-            const buyers: Buyer[] = Array.from(bestByBuyer.values())
-              .sort((a, b) => b.price_per_kg - a.price_per_kg)
-              .map((bid) => ({
-                bidId: bid.id,
-                buyerId: bid.buyer_id,
-                name: bid.user
-                  ? `${bid.user.first_name} ${bid.user.last_name}`
-                  : "Acheteur",
-                quantity: `${bid.quantity_requested} kg`,
-                proposedPrice: bid.price_per_kg,
-              }));
+          clearTimeout(timeoutId);
 
-            const allocations: Allocation[] = (match.allocations || []).map(
-              (alloc) => {
-                const buyerBid = (match.bids || []).find(
-                  (bid) => bid.buyer_id === alloc.buyer_id
-                );
+          if (!isActive) return;
 
-                return {
-                  id: alloc.id,
-                  buyerName: buyerBid?.user
-                    ? `${buyerBid.user.first_name} ${buyerBid.user.last_name}`
+          setOffers((prev) =>
+            prev.map((offer) => {
+              const match = responses.find((r) => r.product_id === offer.id);
+
+              if (!match || !match.bids) return offer;
+
+              const bestByBuyer = new Map<number, BidApiItem>();
+
+              (match.bids || []).forEach((bid) => {
+                const existing = bestByBuyer.get(bid.buyer_id);
+
+                if (!existing || bid.price_per_kg > existing.price_per_kg) {
+                  bestByBuyer.set(bid.buyer_id, bid);
+                }
+              });
+
+              const buyers: Buyer[] = Array.from(bestByBuyer.values())
+                .sort((a, b) => b.price_per_kg - a.price_per_kg)
+                .map((bid) => ({
+                  bidId: bid.id,
+                  buyerId: bid.buyer_id,
+                  name: bid.user
+                    ? `${bid.user.first_name} ${bid.user.last_name}`
                     : "Acheteur",
-                  quantity: alloc.allocated_quantity,
-                  finalPrice: alloc.final_price,
-                  order: alloc.order,
-                };
+                  quantity: `${bid.quantity_requested} kg`,
+                  proposedPrice: bid.price_per_kg,
+                }));
+
+              const allocations: Allocation[] = (match.allocations || []).map(
+                (alloc) => {
+                  const buyerBid = (match.bids || []).find(
+                    (bid) => bid.buyer_id === alloc.buyer_id
+                  );
+
+                  return {
+                    id: alloc.id,
+                    buyerName: buyerBid?.user
+                      ? `${buyerBid.user.first_name} ${buyerBid.user.last_name}`
+                      : "Acheteur",
+                    quantity: alloc.allocated_quantity,
+                    finalPrice: alloc.final_price,
+                    order: alloc.order,
+                  };
+                }
+              );
+
+              let nextStatus: Offer["status"] = offer.status;
+
+              if (match.status === "active") {
+                nextStatus = "active";
+              } else if (match.status === "closed" && allocations.length > 0) {
+                nextStatus = "sold";
+              } else if (match.status === "closed") {
+                nextStatus = "expired";
               }
-            );
 
-            let nextStatus: Offer["status"] = offer.status;
-
-            if (match.status === "active") {
-              nextStatus = "active";
-            } else if (match.status === "closed" && allocations.length > 0) {
-              nextStatus = "sold";
-            } else if (match.status === "closed") {
-              nextStatus = "expired";
-            }
-
-            return {
-              ...offer,
-              offers: bestByBuyer.size,
-              buyers: buyers.slice(0, 3),
-              allocations,
-              status: nextStatus,
-            };
-          })
-        );
+              return {
+                ...offer,
+                offers: bestByBuyer.size,
+                buyers: buyers.slice(0, 3),
+                allocations,
+                status: nextStatus,
+              };
+            })
+          );
+        } catch (fetchErr) {
+          clearTimeout(timeoutId);
+          if (!isActive) return;
+          console.error("Polling seller bids fetch error:", fetchErr);
+        }
       } catch (err) {
         if (!isActive) return;
         console.error("Polling seller bids error:", err);
@@ -494,7 +504,8 @@ export default function SellerDashboardPage() {
 
     fetchAll();
 
-    const intervalId = setInterval(fetchAll, 5000);
+    // 45-second polling interval for live proposition prix updates
+    const intervalId = setInterval(fetchAll, 45000);
 
     return () => {
       isActive = false;

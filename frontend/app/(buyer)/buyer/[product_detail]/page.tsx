@@ -668,7 +668,7 @@ import { useState, useEffect, useRef } from "react";
 import { BuyModal } from "@/components/ui/BuyModal";
 import { NegotiateModal } from "@/components/ui/NegotiateModal";
 import { api } from "@/utils/apiClient";
-
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 // ─── Backend types ─────────────────────────────────────────────────────────────
 
 interface RawProduct {
@@ -869,27 +869,34 @@ useEffect(() => {
       if (!isActive) return;
       if (showLoading) setPollStatus("connecting");
 
-      const res = await fetch(`http://localhost:5000/api/bids/${productId}`);
+      // Use AbortController for timeout handling (30s max)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-      // ❗ check if response is OK
-      if (!res.ok) {
-        throw new Error(`HTTP error ${res.status}`);
-      }
+      try {
+        const data = await api.get<BidsResponse>(`bids/${productId}`);
 
-      const data = await res.json(); // ✅ now safe
+        clearTimeout(timeoutId);
 
-      if (!isActive) return;
+        if (!isActive) return;
 
-      console.log("API:", data);
-
-      if (data?.type === "bids_update" && Array.isArray(data.bids)) {
-        setBids(data.bids);
-        setPollStatus("open");
-      } else {
-        setBids([]);
+        if (data?.type === "bids_update" && Array.isArray(data.bids)) {
+          setBids(data.bids);
+          setPollStatus("open");
+        } else if (Array.isArray(data?.bids)) {
+          // Handle case where API returns bids array directly
+          setBids(data.bids);
+          setPollStatus("open");
+        } else {
+          setBids([]);
+          setPollStatus("error");
+        }
+      } catch (fetchErr) {
+        clearTimeout(timeoutId);
+        if (!isActive) return;
+        console.error("Polling bids fetch error:", fetchErr);
         setPollStatus("error");
       }
-
     } catch (err) {
       if (!isActive) return;
       console.error("Polling bids error:", err);
@@ -897,15 +904,15 @@ useEffect(() => {
     }
   };
 
-  // first call
+  // First fetch on mount
   fetchBids(true);
 
-  // every 5 seconds
+  // 45-second polling interval for live proposition prix updates
   intervalId = setInterval(() => {
     fetchBids(false);
-  }, 5000);
+  }, 45000);
 
-  // cleanup
+  // Cleanup
   return () => {
     isActive = false;
     if (intervalId) clearInterval(intervalId);
@@ -919,16 +926,24 @@ const reconnect = async () => {
   try {
     setPollStatus("connecting");
 
-    const res = await fetch(`http://localhost:5000/api/bids/${productId}`);
-    if (!res.ok) throw new Error("Request failed");
+    // Use AbortController for timeout handling (30s max)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-    const data = await res.json();
+    try {
+      const data = await api.get<BidsResponse>(`bids/${productId}`);
 
-    if (data?.type === "bids_update") {
-      setBids(data.bids || []);
-      setPollStatus("open");
-    } else {
-      setPollStatus("error");
+      clearTimeout(timeoutId);
+
+      if (data?.type === "bids_update" || Array.isArray(data?.bids)) {
+        setBids(data?.bids || []);
+        setPollStatus("open");
+      } else {
+        setPollStatus("error");
+      }
+    } catch (fetchErr) {
+      clearTimeout(timeoutId);
+      throw fetchErr;
     }
   } catch (err) {
     console.error("Manual fetch error:", err);
@@ -987,11 +1002,17 @@ const reconnect = async () => {
             api.get<RawUser[]>("users"),
           ]);
 
-        if (!isActive) return;
 
-        const image =
-          rawImages.find((i) => i.product_id === productId)?.image_url ??
-          "https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=800&h=400&fit=crop";
+        if (!isActive) return;
+// const imageUrl = rawImages?.[0]?.image_url;
+const imageUrl = rawImages.find((i) => i.product_id === productId)?.image_url
+console.log(rawImages)
+const image = imageUrl
+  ? `${apiUrl}${imageUrl}`
+  : "https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=800&h=400&fit=crop";
+        // const image =
+        //    apiUrl + rawImages[0]?.image_url ??
+        //   "https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=800&h=400&fit=crop";
 
         const location =
           rawLocations.find((l) => l.id === rawProduct.location_id)?.address ?? "Algérie";
