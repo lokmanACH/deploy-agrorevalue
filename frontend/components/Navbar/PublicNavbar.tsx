@@ -102,7 +102,7 @@ export function PublicNavbar() {
             Se Connecter
           </Link>
           <Link
-            href="/register"
+            href="/signup"
             onClick={() => setMobileMenuOpen(false)}
             className="flex items-center justify-center h-10 rounded-full bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700 transition-colors"
           >
