@@ -80,6 +80,10 @@ export default function BuyerDashboardPage() {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("Tous");
 
+  const [refresh, setRefresh] = useState(false);
+  const triggerRefresh = () => setRefresh(!refresh);
+
+
   useEffect(() => {
     async function loadProducts() {
       try {
@@ -141,7 +145,7 @@ export default function BuyerDashboardPage() {
     }
 
     loadProducts();
-  }, []);
+  }, [refresh]);
 
   const handleAction = (type: "buy" | "negotiate", product: Product) => {
     setActiveProduct(product);
@@ -273,7 +277,7 @@ export default function BuyerDashboardPage() {
       </div>
 
       {modal === "buy" && activeProduct && (
-        <BuyModal product={activeProduct} onClose={closeModal} />
+        <BuyModal product={activeProduct} onClose={closeModal} doRefresh={triggerRefresh} />
       )}
       {modal === "negotiate" && activeProduct && (
         <NegotiateModal product={activeProduct} onClose={closeModal} />

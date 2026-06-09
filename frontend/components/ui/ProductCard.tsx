@@ -132,18 +132,18 @@ export function ProductCard({
 
         {/* Buttons */}
         {quality === "C" ? (
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            <button
+          <div className="mt-3">
+            {/* <button
               onClick={onBuy}
               className="h-9 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition-colors"
             >
-              Achat immédiat
-            </button>
+              Acheter
+            </button> */}
             <button
               onClick={onNegotiate}
-              className="h-9 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-xs font-semibold rounded-lg transition-colors"
+              className="w-full h-9 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-xs font-semibold rounded-lg transition-colors"
             >
-              Proposer un prix
+              Faire une enchère
             </button>
           </div>
         ) : (
@@ -151,8 +151,8 @@ export function ProductCard({
             <button
               onClick={onBuy}
               className="w-full h-9 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition-colors"
-            >
-              Achat immédiat
+              >
+                Acheter
             </button>
           </div>
         )}

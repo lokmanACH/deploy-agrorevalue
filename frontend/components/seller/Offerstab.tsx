@@ -392,7 +392,7 @@ function OfferRow({ offer, onDelete, onUpdate }: OfferRowProps) {
   const buyers     = offer.buyers     ?? [];
   const allocations = offer.allocations ?? [];
   const isSold     = offer.status === "sold" && allocations.length > 0;
-console.log(buyers)
+
   return (
     <>
       <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">

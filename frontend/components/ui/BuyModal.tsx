@@ -17,9 +17,10 @@ interface Product {
 interface BuyModalProps {
   product: Product;
   onClose: () => void;
+  doRefresh: () => void;
 }
 
-export function BuyModal({ product, onClose }: BuyModalProps) {
+export function BuyModal({ product, onClose, doRefresh }: BuyModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedQuantity, setSelectedQuantity] = useState("");
@@ -65,17 +66,27 @@ export function BuyModal({ product, onClose }: BuyModalProps) {
         created_at: new Date().toISOString()
       };
       
-      const res_bid = await api.post<any>("bids", obj);
-      
-      await api.post("allocations", {
-        product_id: product.id,
-        buyer_id: user.id,
-        bid_id: res_bid.id,
-        allocated_quantity: qty,
-        final_price: product.kiloPrice * qty + product.deliveryPrice,
-        order: 1,
-        created_at: new Date().toISOString()
+      // const res_bid = await api.post<any>("bids", obj);
+
+
+      const quantity = String(product.quantity);
+      const quntAval = Number(quantity.split(" kg")[0])
+      // Extract the numeric part
+       // Extract the numeric part
+      await api.put<any>(`products/${product.id}`, {
+        quantity_available : quntAval - qty,
       });
+      doRefresh();
+      
+      // await api.post("allocations", {
+      //   product_id: product.id,
+      //   buyer_id: user.id,
+      //   bid_id: res_bid.id,
+      //   allocated_quantity: qty,
+      //   final_price: product.kiloPrice * qty + product.deliveryPrice,
+      //   order: 1,
+      //   created_at: new Date().toISOString()
+      // });
       
       onClose();
     } catch (err: any) {
