@@ -104,7 +104,7 @@ async function fetchClient<T>(
   }
 
   const url = `${BASE_URL}/api/${path}`;
-
+// test
   try {
     const response = await fetch(url, config);
 
