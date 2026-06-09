@@ -20,12 +20,18 @@ interface NegotiateModalProps {
 
 export function NegotiateModal({ product, onClose }: NegotiateModalProps) {
   const [offerKiloPrice, setOfferKiloPrice] = useState("");
+  const [offerTotalPrice, setOfferTotalPrice] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  console.log(product)
 
   const fullQuantity = typeof product.quantity === "string" 
     ? parseFloat(product.quantity) 
     : product.quantity;
+
+  const isQualityC = product.quality == "C";
+  const currentOffer = isQualityC ? offerTotalPrice : offerKiloPrice;
+  const currentOfferNum = currentOffer ? Number(currentOffer) : 0;
 
   const handleSubmit = async () => {
     setError(null);
@@ -36,11 +42,32 @@ export function NegotiateModal({ product, onClose }: NegotiateModalProps) {
       return;
     }
 
-    const price = Number(offerKiloPrice);
+    let pricePerKg: number;
+    let totalPrice: number;
 
-    if (!offerKiloPrice || isNaN(price) || price <= 0) {
-      setError("Veuillez saisir un prix valide.");
-      return;
+    if (isQualityC) {
+      // For quality C: input is total price
+      totalPrice = currentOfferNum;
+      pricePerKg = totalPrice / fullQuantity;
+
+      if (!offerTotalPrice || isNaN(totalPrice) || totalPrice <= 0) {
+        setError("Veuillez saisir un prix total valide.");
+        return;
+      }
+
+      if (totalPrice < product.kiloPrice) {
+        setError(`Le prix total doit être au minimum ${product.kiloPrice.toLocaleString("fr-DZ")} DA (prix minimum du vendeur).`);
+        return;
+      }
+    } else {
+      // For quality B: input is price per kg
+      pricePerKg = currentOfferNum;
+      totalPrice = pricePerKg * fullQuantity;
+
+      if (!offerKiloPrice || isNaN(pricePerKg) || pricePerKg <= 0) {
+        setError("Veuillez saisir un prix valide.");
+        return;
+      }
     }
 
     try {
@@ -49,8 +76,8 @@ export function NegotiateModal({ product, onClose }: NegotiateModalProps) {
         product_id: product.id,
         buyer_id: user.id,
         quantity_requested: fullQuantity,
-        price_per_kg: price,
-        total_price: price * fullQuantity,
+        price_per_kg: pricePerKg,
+        total_price: totalPrice,
         status: "pending",
         created_at: new Date().toISOString(),
       };
@@ -100,44 +127,56 @@ export function NegotiateModal({ product, onClose }: NegotiateModalProps) {
           <div className="flex justify-between text-sm">
             <span className="text-zinc-500 dark:text-zinc-400">{product.quality === "C" ? "Prix total" : "Prix au Kilo"}</span>
             <span className="font-medium text-zinc-900 dark:text-zinc-50">
-              {product.kiloPrice.toLocaleString("fr-DZ")} DA
+              {product.quality === "C" ? product.totalPrice.toLocaleString("fr-DZ") : product.kiloPrice.toLocaleString("fr-DZ")} DA
             </span>
           </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-zinc-500 dark:text-zinc-400">Prix demandé</span>
-            <span className="font-semibold text-zinc-900 dark:text-zinc-50">
-              {product.totalPrice.toLocaleString("fr-DZ")} DA
-            </span>
-          </div>
+          {product.quality !== "C" && (
+            <div className="flex justify-between text-sm">
+              <span className="text-zinc-500 dark:text-zinc-400">Prix demandé</span>
+              <span className="font-semibold text-zinc-900 dark:text-zinc-50">
+                {product.totalPrice.toLocaleString("fr-DZ")} DA
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="mb-5 space-y-4">
           <div>
             <label className="block text-sm text-zinc-500 dark:text-zinc-400 mb-1.5">
-              Prix au kilo proposé <span className="text-red-600">*</span>
+              {isQualityC ? "Prix total proposé (pour la quantité entière)" : "Prix au kilo proposé"} <span className="text-red-600">*</span>
             </label>
             <div className="relative">
               <input
                 type="number"
-                placeholder="Ex : 50"
-                value={offerKiloPrice}
-                onChange={(e) => setOfferKiloPrice(e.target.value)}
+                placeholder={isQualityC ? "Ex : 500" : "Ex : 50"}
+                value={isQualityC ? offerTotalPrice : offerKiloPrice}
+                onChange={(e) => isQualityC ? setOfferTotalPrice(e.target.value) : setOfferKiloPrice(e.target.value)}
                 disabled={loading}
                 className="w-full h-10 px-3 pr-12 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-sm text-zinc-900 dark:text-zinc-50 placeholder-zinc-400 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all disabled:opacity-50"
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-zinc-400">DA</span>
             </div>
-            {offerKiloPrice && Number(offerKiloPrice) < product.kiloPrice && (
+            {isQualityC && (
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1.5">
+                Entrez le prix total que vous proposez pour les {fullQuantity.toLocaleString("fr-DZ")} kg. Le prix minimum accepté est {product.kiloPrice.toLocaleString("fr-DZ")} DA.
+              </p>
+            )}
+            {!isQualityC && offerKiloPrice && Number(offerKiloPrice) < product.kiloPrice && (
               <p className="text-xs text-amber-600 dark:text-amber-400 mt-1.5">
                 Votre prix est{" "}
                 {Math.round((1 - Number(offerKiloPrice) / product.kiloPrice) * 100)}% en dessous
                 du prix demandé.
               </p>
             )}
+            {isQualityC && offerTotalPrice && Number(offerTotalPrice) < product.totalPrice && (
+              <p className="text-xs text-red-600 dark:text-red-400 mt-1.5">
+                ⚠️ Le prix doit être au minimum {product.totalPrice.toLocaleString("fr-DZ")} DA.
+              </p>
+            )}
           </div>
         </div>
 
-        {offerKiloPrice && Number(offerKiloPrice) > 0 && (
+        {currentOfferNum > 0 && (
           <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl p-4 mb-5 space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-emerald-700 dark:text-emerald-400">Quantité</span>
@@ -145,16 +184,21 @@ export function NegotiateModal({ product, onClose }: NegotiateModalProps) {
                 {fullQuantity.toLocaleString("fr-DZ")} kg
               </span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-emerald-700 dark:text-emerald-400">Prix au kilo</span>
-              <span className="font-medium text-emerald-700 dark:text-emerald-400">
-                {Number(offerKiloPrice).toLocaleString("fr-DZ")} DA
-              </span>
-            </div>
+            {!isQualityC && (
+              <div className="flex justify-between text-sm">
+                <span className="text-emerald-700 dark:text-emerald-400">Prix au kilo</span>
+                <span className="font-medium text-emerald-700 dark:text-emerald-400">
+                  {Number(offerKiloPrice).toLocaleString("fr-DZ")} DA
+                </span>
+              </div>
+            )}
             <div className="border-t border-emerald-200 dark:border-emerald-800 pt-2 flex justify-between">
-              <span className="text-emerald-700 dark:text-emerald-400 font-medium">Total proposé</span>
+              <span className="text-emerald-700 dark:text-emerald-400 font-medium">{isQualityC ? "Prix total proposé" : "Total proposé"}</span>
               <span className="font-bold text-emerald-600 dark:text-emerald-400 text-lg">
-                {(Number(offerKiloPrice) * fullQuantity).toLocaleString("fr-DZ")} DA
+                {isQualityC 
+                  ? Number(offerTotalPrice).toLocaleString("fr-DZ") 
+                  : (Number(offerKiloPrice) * fullQuantity).toLocaleString("fr-DZ")
+                } DA
               </span>
             </div>
           </div>
@@ -171,7 +215,7 @@ export function NegotiateModal({ product, onClose }: NegotiateModalProps) {
           <button 
             className="flex-1 h-10 bg-emerald-600 hover:bg-emerald-700 disabled:bg-zinc-300 dark:disabled:bg-zinc-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center justify-center disabled:opacity-50" 
             onClick={handleSubmit}
-            disabled={loading || !offerKiloPrice || parseFloat(offerKiloPrice) <= 0}
+            disabled={loading || !currentOffer || currentOfferNum <= 0}
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Envoyer l'offre"}
           </button>

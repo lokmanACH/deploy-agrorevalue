@@ -184,7 +184,7 @@ function EditModal({ offer, onClose, onSaved }: EditModalProps) {
               </label>
               <input
                 type="number"
-                value={form.kiloPrice}
+                value={form.quality === "C" ? form.totalPrice : form.kiloPrice}
                 onChange={(e) => update("kiloPrice", e.target.value)}
                 className={inputCls}
                 disabled={loading}
@@ -392,7 +392,7 @@ function OfferRow({ offer, onDelete, onUpdate }: OfferRowProps) {
   const buyers     = offer.buyers     ?? [];
   const allocations = offer.allocations ?? [];
   const isSold     = offer.status === "sold" && allocations.length > 0;
-
+console.log(buyers)
   return (
     <>
       <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
@@ -448,7 +448,7 @@ function OfferRow({ offer, onDelete, onUpdate }: OfferRowProps) {
                   {offer.totalPrice.toLocaleString("fr-DZ")}
                 </span>
                 <span className="text-xs text-zinc-500">DA</span>
-                <span className="text-xs text-zinc-400 ml-1">· {offer.kiloPrice} DA{offer.quality === "C" ? " (total)" : "/kg"}</span>
+                <span className="text-xs text-zinc-400 ml-1">{offer.quality === "C" ? " (prix total)" : offer.kiloPrice + " /kg"}</span>
               </div>
 
               <div className="flex items-center gap-2">
@@ -540,7 +540,7 @@ function OfferRow({ offer, onDelete, onUpdate }: OfferRowProps) {
                         </span>
                         <span className="text-xs text-zinc-500 dark:text-zinc-400 mr-3">{buyer.quantity}</span>
                         <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-                          {buyer.proposedPrice} DA/kg
+                          {buyer.proposedPrice.toFixed(2)} DA/kg
                         </span>
                         <div className="ml-4 flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400">
                           Total :{" "}

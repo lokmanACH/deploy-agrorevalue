@@ -23,7 +23,8 @@ export function BuyModal({ product, onClose }: BuyModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedQuantity, setSelectedQuantity] = useState("");
-
+  const isQualityC = product.quality == "C";
+  
   const maxQuantity = typeof product.quantity === "string" 
     ? parseFloat(product.quantity) 
     : product.quantity;
@@ -122,9 +123,16 @@ export function BuyModal({ product, onClose }: BuyModalProps) {
           <div className="flex justify-between text-sm">
             <span className="text-zinc-500 dark:text-zinc-400">{product.quality === "C" ? "Prix total" : "Prix au Kilo"}</span>
             <span className="font-medium text-zinc-900 dark:text-zinc-50">
-              {product.kiloPrice.toLocaleString("fr-DZ")} DA
+              {isQualityC ? product.totalPrice.toLocaleString("fr-DZ") : product.kiloPrice.toLocaleString("fr-DZ")} DA
             </span>
           </div>
+          {product.quality === "C" && (
+            <div className="pt-2 border-t border-zinc-200 dark:border-zinc-700 flex items-start gap-2">
+              <div className="text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded px-2 py-1.5 w-full">
+                Ce prix est le prix minimum total de ce lot. Vous ne pouvez pas proposer un prix inférieur.
+              </div>
+            </div>
+          )}
           <div className="flex justify-between text-sm">
             <span className="text-zinc-500 dark:text-zinc-400">Livraison</span>
             <span className="font-medium text-zinc-900 dark:text-zinc-50">

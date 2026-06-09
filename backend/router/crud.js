@@ -58,6 +58,16 @@ router.post('/:entity', checkEntityExists, async (req, res) => {
     try {
         const newRecord = { ...req.body };
         
+        // Validate: Prevent bids on quality A products (A products are immediate purchase only)
+        if (req.params.entity === 'bids' && newRecord.product_id) {
+            const product = req.db.products.find(p => p.id == newRecord.product_id);
+            if (product && product.quality === 'A') {
+                return res.status(400).json({ 
+                    error: "Les offres ne sont pas autorisées pour les produits de qualité A. Utilisez l'achat immédiat." 
+                });
+            }
+        }
+        
         // Auto-generate numeric ID if not provided
         if (!newRecord.id) {
             const maxId = req.entityData.reduce((max, item) => {

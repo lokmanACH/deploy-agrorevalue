@@ -361,147 +361,114 @@
         {
             "seller_id": 1,
             "category_id": 1,
-            "title": "tomato",
-            "description": "no desc",
-            "quality": "A",
-            "quantity_available": 1201,
-            "price_full_sale": 50442,
-            "starting_price": 42,
-            "location_id": 20,
-            "deliveryPrice": 5000,
-            "status": "active",
-            "start_time": "2026-05-27T07:33:09.963Z",
-            "end_time": "2027-05-27T07:33:09.963Z",
-            "id": 2,
-            "created_at": "2026-05-27T07:33:10.039Z"
-        },
-        {
-            "seller_id": 1,
-            "category_id": 1,
-            "title": "basla",
+            "title": "test",
             "description": "",
             "quality": "C",
-            "quantity_available": 1000,
-            "price_full_sale": 5089889,
-            "starting_price": 5089.889,
-            "location_id": 22,
-            "deliveryPrice": 2299,
-            "status": "closed",
-            "start_time": "2026-05-28T09:01:14.086Z",
-            "end_time": "2026-05-31T15:01:14.086Z",
-            "id": 3,
-            "created_at": "2026-05-28T09:01:14.123Z"
+            "quantity_available": 899,
+            "price_full_sale": 3000,
+            "starting_price": 3.337041156840934,
+            "location_id": 25,
+            "deliveryPrice": 0,
+            "status": "active",
+            "start_time": "2026-06-09T14:54:53.189Z",
+            "end_time": "2026-06-10T14:54:53.189Z",
+            "id": 1,
+            "created_at": "2026-06-09T14:54:53.284Z"
         },
         {
             "seller_id": 1,
             "category_id": 1,
-            "title": "7omos",
+            "title": "dcr",
             "description": "",
             "quality": "A",
-            "quantity_available": 2000,
-            "price_full_sale": 466000,
-            "starting_price": 233,
-            "location_id": 15,
-            "deliveryPrice": 3497,
+            "quantity_available": 2300,
+            "price_full_sale": 2070000,
+            "starting_price": 900,
+            "location_id": 26,
+            "deliveryPrice": 1999,
             "status": "active",
-            "start_time": "2026-05-28T09:41:02.125Z",
-            "end_time": "2027-05-28T09:41:02.125Z",
-            "id": 4,
-            "created_at": "2026-05-28T09:41:02.165Z"
+            "start_time": "2026-06-09T18:48:30.470Z",
+            "end_time": "2027-06-09T18:48:30.470Z",
+            "id": 2,
+            "created_at": "2026-06-09T18:48:30.547Z"
         }
     ],
     "product_images": [
         {
+            "product_id": 1,
+            "image_url": "/uploads/1781016893241-1od1iwcj0.jpg",
+            "id": 1,
+            "created_at": "2026-06-09T14:54:53.349Z"
+        },
+        {
             "product_id": 2,
-            "image_url": "/uploads/1779867189998-5wvwroh9w.jpg",
-            "id": 4,
-            "created_at": "2026-05-27T07:33:10.105Z"
-        },
-        {
-            "product_id": 3,
-            "image_url": "/uploads/1779958874100-o6y86btr7.jpg",
-            "id": 5,
-            "created_at": "2026-05-28T09:01:14.168Z"
-        },
-        {
-            "product_id": 4,
-            "image_url": "/uploads/1779961262145-zyq5fimv0.jpg",
-            "id": 6,
-            "created_at": "2026-05-28T09:41:02.199Z"
+            "image_url": "/uploads/1781030910496-z2l1x07pb.jpg",
+            "id": 2,
+            "created_at": "2026-06-09T18:48:30.616Z"
         }
     ],
     "bids": [
         {
-            "product_id": 3,
-            "buyer_id": 25,
-            "quantity_requested": 300,
-            "price_per_kg": 5089.889,
-            "total_price": 1526966.7,
+            "product_id": 1,
+            "buyer_id": 1,
+            "quantity_requested": 899,
+            "price_per_kg": 5.561735261401557,
+            "total_price": 5000,
             "status": "pending",
-            "created_at": "2026-05-28T09:39:29.573Z",
+            "created_at": "2026-06-09T18:40:06.015Z",
             "id": 1
         },
         {
-            "product_id": 4,
-            "buyer_id": 24,
-            "quantity_requested": 2000,
-            "price_per_kg": 23000000,
-            "total_price": 46000000000,
+            "product_id": 1,
+            "buyer_id": 1,
+            "quantity_requested": 899,
+            "price_per_kg": 10.011123470522802,
+            "total_price": 9000,
             "status": "pending",
-            "created_at": "2026-05-28T09:46:26.376Z",
+            "created_at": "2026-06-09T18:42:50.482Z",
             "id": 2
         },
         {
-            "product_id": 4,
-            "buyer_id": 24,
-            "quantity_requested": 2000,
-            "price_per_kg": 3333,
-            "total_price": 6666000,
+            "product_id": 1,
+            "buyer_id": 1,
+            "quantity_requested": 100,
+            "price_per_kg": 3.337041156840934,
+            "total_price": 333.70411568409344,
             "status": "pending",
-            "created_at": "2026-06-05T14:24:45.329Z",
+            "created_at": "2026-06-09T19:00:43.612Z",
             "id": 3
         },
         {
-            "product_id": 2,
-            "buyer_id": 24,
-            "quantity_requested": 1201,
-            "price_per_kg": 99999,
-            "total_price": 120098799,
+            "product_id": 1,
+            "buyer_id": 1,
+            "quantity_requested": 100,
+            "price_per_kg": 3.337041156840934,
+            "total_price": 333.70411568409344,
             "status": "pending",
-            "created_at": "2026-06-05T14:30:43.897Z",
+            "created_at": "2026-06-09T19:01:28.126Z",
             "id": 4
-        },
-        {
-            "product_id": 4,
-            "buyer_id": 24,
-            "quantity_requested": 2000,
-            "price_per_kg": 99999999999999,
-            "total_price": 199999999999998000,
-            "status": "pending",
-            "created_at": "2026-06-05T14:30:54.317Z",
-            "id": 5
         }
     ],
     "allocations": [
         {
-            "product_id": 3,
-            "buyer_id": 25,
-            "bid_id": 1,
-            "allocated_quantity": 300,
-            "final_price": 1529265.7,
+            "product_id": 1,
+            "buyer_id": 1,
+            "bid_id": 3,
+            "allocated_quantity": 100,
+            "final_price": 333.70411568409344,
             "order": 1,
-            "created_at": "2026-05-28T09:39:29.749Z",
+            "created_at": "2026-06-09T19:00:43.752Z",
             "id": 1
         },
         {
-            "id": 2,
-            "product_id": 3,
-            "buyer_id": 25,
-            "bid_id": 1,
-            "allocated_quantity": 1000,
-            "final_price": 5092188,
+            "product_id": 1,
+            "buyer_id": 1,
+            "bid_id": 4,
+            "allocated_quantity": 100,
+            "final_price": 333.70411568409344,
             "order": 1,
-            "created_at": "2026-05-31T18:11:00.035Z"
+            "created_at": "2026-06-09T19:01:28.250Z",
+            "id": 2
         }
     ],
     "buyer_preferences": [
@@ -584,6 +551,84 @@
             "quantity": 2000,
             "price_per_kg": 99999999999999,
             "total_price": 199999999999998000
+        },
+        {
+            "id": 7,
+            "user_id": 1,
+            "type": "new_bid",
+            "message": "New bid on \"7omos\" from Organic DZ: 2000kg @ 233 DZ/kg",
+            "is_read": false,
+            "created_at": "2026-06-09T14:23:26.035Z",
+            "product_id": 4,
+            "buyer_id": 24,
+            "quantity": 2000,
+            "price_per_kg": 233,
+            "total_price": 466000
+        },
+        {
+            "id": 8,
+            "user_id": 1,
+            "type": "new_bid",
+            "message": "New bid on \"Tomata\" from Organic DZ: 300kg @ 1.11 DZ/kg",
+            "is_read": false,
+            "created_at": "2026-06-09T14:43:44.320Z",
+            "product_id": 5,
+            "buyer_id": 24,
+            "quantity": 300,
+            "price_per_kg": 1.11,
+            "total_price": 333
+        },
+        {
+            "id": 9,
+            "user_id": 1,
+            "type": "new_bid",
+            "message": "New bid on \"test\" from Farm Fresh: 899kg @ 5.561735261401557 DZ/kg",
+            "is_read": false,
+            "created_at": "2026-06-09T18:40:06.141Z",
+            "product_id": 1,
+            "buyer_id": 1,
+            "quantity": 899,
+            "price_per_kg": 5.561735261401557,
+            "total_price": 5000
+        },
+        {
+            "id": 10,
+            "user_id": 1,
+            "type": "new_bid",
+            "message": "New bid on \"test\" from Farm Fresh: 899kg @ 10.011123470522802 DZ/kg",
+            "is_read": false,
+            "created_at": "2026-06-09T18:42:50.570Z",
+            "product_id": 1,
+            "buyer_id": 1,
+            "quantity": 899,
+            "price_per_kg": 10.011123470522802,
+            "total_price": 9000
+        },
+        {
+            "id": 11,
+            "user_id": 1,
+            "type": "new_bid",
+            "message": "New bid on \"test\" from Farm Fresh: 100kg @ 3.337041156840934 DZ/kg",
+            "is_read": false,
+            "created_at": "2026-06-09T19:00:43.712Z",
+            "product_id": 1,
+            "buyer_id": 1,
+            "quantity": 100,
+            "price_per_kg": 3.337041156840934,
+            "total_price": 333.70411568409344
+        },
+        {
+            "id": 12,
+            "user_id": 1,
+            "type": "new_bid",
+            "message": "New bid on \"test\" from Farm Fresh: 100kg @ 3.337041156840934 DZ/kg",
+            "is_read": false,
+            "created_at": "2026-06-09T19:01:28.215Z",
+            "product_id": 1,
+            "buyer_id": 1,
+            "quantity": 100,
+            "price_per_kg": 3.337041156840934,
+            "total_price": 333.70411568409344
         }
     ],
     "locations": [
@@ -751,6 +796,38 @@
             "address": "Djmila, Jijel",
             "id": 22,
             "created_at": "2026-05-28T09:01:14.065Z"
+        },
+        {
+            "user_id": 1,
+            "id_wilaya": 12,
+            "id_commune": 380,
+            "address": "Bekkaria, Tbessa",
+            "id": 23,
+            "created_at": "2026-06-09T14:27:25.592Z"
+        },
+        {
+            "user_id": 1,
+            "id_wilaya": 11,
+            "id_commune": 362,
+            "address": "In Amguel, Tamanrasset",
+            "id": 24,
+            "created_at": "2026-06-09T14:48:45.620Z"
+        },
+        {
+            "user_id": 1,
+            "id_wilaya": 6,
+            "id_commune": 190,
+            "address": "Kendira, Béjaïa",
+            "id": 25,
+            "created_at": "2026-06-09T14:54:53.158Z"
+        },
+        {
+            "user_id": 1,
+            "id_wilaya": 16,
+            "id_commune": 570,
+            "address": "Hussein Dey, Alger",
+            "id": 26,
+            "created_at": "2026-06-09T18:48:30.438Z"
         }
     ],
     "revenue": [

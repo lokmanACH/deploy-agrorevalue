@@ -44,6 +44,13 @@ export function ProductCard({
   const formattedDelivery = deliveryPrice.toLocaleString("fr-DZ");
   const formattedKiloPrice = kiloPrice.toLocaleString("fr-DZ");
 
+  console.log("the quality is: ",quality)
+  console.log("the quantity is: ",quantity)
+  console.log("the category is: ",category)
+  console.log("the price per kilo is: ",kiloPrice)
+  console.log("the total price is: ",totalPrice)
+  console.log("the delivery price is: ",deliveryPrice)
+
   return (
     <div className="w-72 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden hover:shadow-md transition-shadow duration-200">
 
@@ -70,7 +77,9 @@ export function ProductCard({
         {/* Time left badge */}
         <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-2.5 py-1 rounded-full">
           <Clock className="w-3 h-3" />
-          {timeLeft}
+          {
+            (quality === "A" || quality === "B") ? "Permanente" : timeLeft
+          }
         </div>
         {/* Quality badge */}
         <div className={`absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full border ${qualityColors[quality]}`}>
@@ -95,7 +104,7 @@ export function ProductCard({
           </div>
           <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
             <Coins className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
-            <span>{quality === "C" ? "Prix total : " : "Prix au kilo : "}<span className="font-medium text-zinc-800 dark:text-zinc-200">{formattedKiloPrice} DA</span></span>
+            <span>{quality === "C" ? "Prix total : " : "Prix au kilo : "}<span className="font-medium text-zinc-800 dark:text-zinc-200">{quality === "C" ? formattedTotal : formattedKiloPrice} DA</span></span>
           </div>
           <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
             <MapPin className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 shrink-0" />
@@ -122,26 +131,31 @@ export function ProductCard({
         </div>
 
         {/* Buttons */}
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          <button
-            onClick={onBuy}
-            className="h-9 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition-colors"
-          >
-            Achat immédiat
-          </button>
-          <button
-            onClick={onNegotiate}
-            disabled={quality === "C"}
-            className={`h-9 text-xs font-semibold rounded-lg transition-colors ${
-              quality === "C"
-                ? "border border-zinc-200 dark:border-zinc-700 text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-800 cursor-not-allowed opacity-50"
-                : "border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900"
-            }`}
-            title={quality === "C" ? "Négociation non disponible pour la qualité C" : ""}
-          >
-            Proposer un prix
-          </button>
-        </div>
+        {quality === "C" ? (
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <button
+              onClick={onBuy}
+              className="h-9 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition-colors"
+            >
+              Achat immédiat
+            </button>
+            <button
+              onClick={onNegotiate}
+              className="h-9 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-900 text-xs font-semibold rounded-lg transition-colors"
+            >
+              Proposer un prix
+            </button>
+          </div>
+        ) : (
+          <div className="mt-3">
+            <button
+              onClick={onBuy}
+              className="w-full h-9 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition-colors"
+            >
+              Achat immédiat
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
