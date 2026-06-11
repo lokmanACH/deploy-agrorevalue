@@ -79,6 +79,7 @@ export default function BuyerDashboardPage() {
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("Tous");
+  const [priceSort, setPriceSort] = useState<"desc" | "asc">("desc");
 
   const [refresh, setRefresh] = useState(false);
   const triggerRefresh = () => setRefresh(!refresh);
@@ -170,7 +171,9 @@ export default function BuyerDashboardPage() {
 
       return matchSearch && matchCategory;
     })
-    .sort((a, b) => b.totalPrice - a.totalPrice);
+    .sort((a, b) =>
+      priceSort === "asc" ? a.totalPrice - b.totalPrice : b.totalPrice - a.totalPrice
+    );
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
@@ -204,6 +207,21 @@ export default function BuyerDashboardPage() {
                 </button>
               ))}
             </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <label htmlFor="priceSort" className="text-xs text-zinc-500 dark:text-zinc-400 hidden sm:inline-block">
+              Trier par prix
+            </label>
+            <select
+              id="priceSort"
+              value={priceSort}
+              onChange={(e) => setPriceSort(e.target.value as "asc" | "desc")}
+              className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-sm text-zinc-900 dark:text-zinc-50 px-3 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
+            >
+              <option value="desc">Prix : du plus élevé au plus bas</option>
+              <option value="asc">Prix : du plus bas au plus élevé</option>
+            </select>
           </div>
 
           <span className="hidden sm:block text-xs text-zinc-400 shrink-0">

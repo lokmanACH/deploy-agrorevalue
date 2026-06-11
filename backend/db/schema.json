@@ -419,7 +419,7 @@
             "starting_price": 111.11111111111111,
             "location_id": 29,
             "deliveryPrice": 2000,
-            "status": "active",
+            "status": "closed",
             "start_time": "2026-06-09T19:57:26.293Z",
             "end_time": "2026-06-10T19:57:26.293Z",
             "id": 3,
