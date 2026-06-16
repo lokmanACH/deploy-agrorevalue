@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Home, User, LogOut, Menu, X } from "lucide-react";
+import { Home, User, LogOut, Menu, X, ShoppingBag, Gavel } from "lucide-react";
 import Image from "next/image";
 import logo from "@/public/logo.png";
 
@@ -15,7 +15,8 @@ const BuyerSidebar = () => {
   const closeSidebar = () => setIsOpen(false);
 
   const navLinks = [
-    { href: "/buyer", label: "Accueil", icon: Home },
+    { href: "/buyer/store", label: "Marché", icon: ShoppingBag },
+    { href: "/buyer/auction", label: "Enchères", icon: Gavel },
     { href: "/buyer/profile", label: "Profil", icon: User },
   ];
 

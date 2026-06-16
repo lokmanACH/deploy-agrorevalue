@@ -441,6 +441,74 @@
             "end_time": "2027-06-09T19:59:44.919Z",
             "id": 4,
             "created_at": "2026-06-09T19:59:45.018Z"
+        },
+        {
+            "seller_id": 1,
+            "category_id": 1,
+            "title": "test",
+            "description": "",
+            "quality": "C",
+            "quantity_available": 30,
+            "price_full_sale": 10000,
+            "starting_price": 333.3333333333333,
+            "location_id": 31,
+            "deliveryPrice": 0,
+            "status": "active",
+            "start_time": "2026-06-16T14:50:14.818Z",
+            "end_time": "2026-06-18T14:50:14.818Z",
+            "id": 5,
+            "created_at": "2026-06-16T14:50:14.978Z"
+        },
+        {
+            "seller_id": 1,
+            "category_id": 5,
+            "title": "test",
+            "description": "",
+            "quality": "A",
+            "quantity_available": 12,
+            "price_full_sale": 1380,
+            "starting_price": 115,
+            "location_id": 32,
+            "deliveryPrice": 0,
+            "status": "active",
+            "start_time": "2026-06-16T14:52:54.923Z",
+            "end_time": "2027-06-16T14:52:54.923Z",
+            "id": 6,
+            "created_at": "2026-06-16T14:52:54.992Z"
+        },
+        {
+            "seller_id": 2,
+            "category_id": 4,
+            "title": "pomme de terre",
+            "description": "pomme de terre pour faire des frites ... avec un peu de Ketchup",
+            "quality": "B",
+            "quantity_available": 67,
+            "price_full_sale": 4690,
+            "starting_price": 70,
+            "location_id": 33,
+            "deliveryPrice": 0,
+            "status": "active",
+            "start_time": "2026-06-16T14:54:47.365Z",
+            "end_time": "2027-06-16T14:54:47.365Z",
+            "id": 7,
+            "created_at": "2026-06-16T14:54:47.450Z"
+        },
+        {
+            "seller_id": 2,
+            "category_id": 2,
+            "title": "aerthnnty",
+            "description": "",
+            "quality": "A",
+            "quantity_available": 50,
+            "price_full_sale": 500,
+            "starting_price": 10,
+            "location_id": 34,
+            "deliveryPrice": 149,
+            "status": "active",
+            "start_time": "2026-06-16T15:04:45.611Z",
+            "end_time": "2027-06-16T15:04:45.611Z",
+            "id": 8,
+            "created_at": "2026-06-16T15:04:45.621Z"
         }
     ],
     "product_images": [
@@ -467,6 +535,24 @@
             "image_url": "/uploads/1781035184961-2j2248r40.jpg",
             "id": 4,
             "created_at": "2026-06-09T19:59:45.165Z"
+        },
+        {
+            "product_id": 5,
+            "image_url": "/uploads/1781621414947-cq9uyr03b.jpg",
+            "id": 5,
+            "created_at": "2026-06-16T14:50:15.006Z"
+        },
+        {
+            "product_id": 6,
+            "image_url": "/uploads/1781621574957-fjy895d9a.jpg",
+            "id": 6,
+            "created_at": "2026-06-16T14:52:55.022Z"
+        },
+        {
+            "product_id": 7,
+            "image_url": "/uploads/1781621687421-tsxv935lu.jpg",
+            "id": 7,
+            "created_at": "2026-06-16T14:54:47.479Z"
         }
     ],
     "bids": [
@@ -708,6 +794,38 @@
             "address": "Ouled Brahem, Bordj Bou Arreridj",
             "id": 30,
             "created_at": "2026-06-09T19:59:44.879Z"
+        },
+        {
+            "user_id": 1,
+            "id_wilaya": 43,
+            "id_commune": 1385,
+            "address": "Chelghoum Laid, Mila",
+            "id": 31,
+            "created_at": "2026-06-16T14:50:14.805Z"
+        },
+        {
+            "user_id": 1,
+            "id_wilaya": 11,
+            "id_commune": 355,
+            "address": "Abalessa, Tamanrasset",
+            "id": 32,
+            "created_at": "2026-06-16T14:52:54.912Z"
+        },
+        {
+            "user_id": 2,
+            "id_wilaya": 17,
+            "id_commune": 623,
+            "address": "M'Liliha, Djelfa",
+            "id": 33,
+            "created_at": "2026-06-16T14:54:47.354Z"
+        },
+        {
+            "user_id": 2,
+            "id_wilaya": 16,
+            "id_commune": 571,
+            "address": "Kouba, Alger",
+            "id": 34,
+            "created_at": "2026-06-16T15:04:45.599Z"
         }
     ],
     "revenue": [

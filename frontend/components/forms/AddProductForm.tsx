@@ -49,11 +49,19 @@ const qualityColors: Record<"A" | "B" | "C", string> = {
   C: "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700",
 };
 
+type OfferChannel = "marche" | "enchere";
+
 const EMPTY_FORM = {
   name: "", category_id: 0, quantity: "", unit: "kg",
   quality: "A" as "A" | "B" | "C",
+  offerChannel: "marche" as OfferChannel,
   wilaya_id: "", commune_id: "", kiloPrice: "", deliveryPrice: "", duration: "24 heures", description: "",
 };
+
+const MARKET_CHANNELS: Array<{ value: OfferChannel; label: string }> = [
+  { value: "marche", label: "Marché" },
+  { value: "enchere", label: "Enchère" },
+];
 
 // ─── Shared styles ────────────────────────────────────────────────────────────
 
@@ -409,6 +417,36 @@ export function AddProductForm({ onSuccess }: AddProductFormProps) {
             </div>
           </div>
         </div>
+
+        {form.quality !== "C" && (
+          <div >
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Destination de l'offre</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {MARKET_CHANNELS.map((channel) => (
+                <label
+                  key={channel.value}
+                  className={`flex items-center gap-3 rounded-xl border p-3 text-sm font-medium transition-all cursor-pointer ${
+                    form.offerChannel === channel.value
+                      ? "border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-200"
+                      : "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-700"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="offerChannel"
+                    value={channel.value}
+                    checked={form.offerChannel === channel.value}
+                    onChange={() => update("offerChannel", channel.value)}
+                    className="h-4 w-4 rounded-full text-emerald-600 border-zinc-300 focus:ring-emerald-500"
+                  />
+                  <span>{channel.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Wilaya + Commune */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
