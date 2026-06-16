@@ -495,7 +495,7 @@ function OfferRow({ offer, onDelete, onUpdate }: OfferRowProps) {
                   {allocations.map((alloc) => (
                     <div
                       key={alloc.id}
-                      className="flex items-center gap-3 px-3 py-2.5 bg-gradient-to-r from-emerald-50 to-emerald-50/50 dark:from-emerald-950/30 dark:to-emerald-950/10 rounded-lg border border-emerald-100 dark:border-emerald-900/30"
+                      className="flex items-center gap-3 px-3 py-2.5 bg-linear-to-r from-emerald-50 to-emerald-50/50 dark:from-emerald-950/30 dark:to-emerald-950/10 rounded-lg border border-emerald-100 dark:border-emerald-900/30"
                     >
                       <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/60 flex items-center justify-center text-xs font-bold text-emerald-700 dark:text-emerald-400 shrink-0">
                         {alloc.order}
