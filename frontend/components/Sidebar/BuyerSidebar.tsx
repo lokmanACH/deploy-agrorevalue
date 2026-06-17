@@ -15,7 +15,7 @@ const BuyerSidebar = () => {
   const closeSidebar = () => setIsOpen(false);
 
   const navLinks = [
-    { href: "/buyer/store", label: "Marché", icon: ShoppingBag },
+    { href: "/buyer/store", label: "Marché Direct", icon: ShoppingBag },
     { href: "/buyer/auction", label: "Enchères", icon: Gavel },
     { href: "/buyer/profile", label: "Profil", icon: User },
   ];
